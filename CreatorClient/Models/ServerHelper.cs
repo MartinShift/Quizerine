@@ -14,7 +14,7 @@ namespace Client.Models
 {
     public static class ServerHelper
     {
-        public static void SendQuizResult(QuizResult message)
+        public static void SendResult(QuizResult message)
         {
             var datamessage = new DataMessage()
             {
@@ -22,25 +22,6 @@ namespace Client.Models
                 Type = DataType.QuizResult
             };
             SendToServer(datamessage);
-        }
-        public static void SendNewQuiz(Quiz message)
-        {
-            var datamessage = new DataMessage()
-            {
-                Data = JsonSerializer.Serialize(message),
-                Type = DataType.AddNewQuiz
-            };
-            SendToServer(datamessage);
-        }
-        public static List<Quiz> GetQuizzes()
-        {
-            var datamessage = new DataMessage()
-            {
-                Data = "",
-                Type = DataType.AllQuizzesRequest
-            };
-            var response = SendToServer(datamessage);
-            return JsonSerializer.Deserialize<List<Quiz>>(response.Data);
         }
         public static DataMessage SendToServer(DataMessage message)
         {
