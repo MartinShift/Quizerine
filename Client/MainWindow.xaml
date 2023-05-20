@@ -6,7 +6,42 @@
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+    <Border BorderThickness="2" BorderBrush="BlueViolet">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"></ColumnDefinition>
+                <ColumnDefinition Width="90*"></ColumnDefinition>
+                <ColumnDefinition Width="5*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="15*"></RowDefinition>
+                <RowDefinition Height="70*"></RowDefinition>
+                <RowDefinition Height="15*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="25">
+                <TextBlock Text="Your name:"></TextBlock>
+                <TextBox Grid.Row="0" Grid.Column="0" Width="500" Text="{Binding Path=Nickname, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            </TextBlock>
+            <Border Grid.Row="1" Grid.Column="1"  BorderThickness="1" BorderBrush="BlueViolet">
+                <ListView Grid.Row="1" Grid.Column="1"
+                      ItemsSource="{Binding Path=Quizzes}" 
+                      SelectedItem="{Binding Path=SelectedQuiz}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <TextBlock>#</TextBlock>
+                                <TextBlock Text="{Binding Path=Id}"></TextBlock>
+                                <TextBlock Text=" "></TextBlock>
+                                <TextBlock Text="{Binding Path=Title}"></TextBlock>
+                                <TextBlock Text=" "></TextBlock>
+                                <TextBlock Text="{Binding Path=TimeLimit}"></TextBlock>
+                                <TextBlock Text=" seconds"></TextBlock>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Border>
+            <Button Grid.Row="2" Grid.Column="1" Content="Take quiz" Margin="200,10,200,10" FontSize="25" Command="{Binding Path=TakeQuizCommand}"></Button>
+        </Grid>
+    </Border>
 </Window>
