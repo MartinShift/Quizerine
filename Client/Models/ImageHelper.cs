@@ -64,10 +64,6 @@ namespace Client_Wpf.Models
             {
                 image = new BitmapImage(new Uri(openFileDialog.FileName));
             }
-            if (image.UriSource == null)
-            {
-                image = DefaultImage;
-            }
             return image;
         }
 
