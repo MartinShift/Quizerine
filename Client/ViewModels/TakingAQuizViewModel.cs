@@ -26,7 +26,14 @@ public class TakingAQuizViewModel : NotifyPropertyChangedBase
         _timer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
         {
             _secondsLeft = _time.ToString("c");
-            if (_time == TimeSpan.Zero) _timer.Stop();
+            if (_time == TimeSpan.Zero)
+            {
+                _timer.Stop();
+                _secondsLeft = _time.ToString("c");
+                OnPropertyChanged(nameof(SecondsLeft));
+                MessageBox.Show($"Time's up/\nYou did not make it untill the end", "Sorry!", MessageBoxButton.OK, MessageBoxImage.Information);
+                CloseQuiz();
+            }
             _time = _time.Add(TimeSpan.FromSeconds(-1));
             OnPropertyChanged(nameof(SecondsLeft));
         }, Application.Current.Dispatcher);
@@ -127,10 +134,11 @@ public class TakingAQuizViewModel : NotifyPropertyChangedBase
                 int correctAnswersCount = _answers.Where(a => a).Count();
                 //MessageBox.Show($"Quiz finished\nYour result is {correctAnswersCount} out of {AllQuestionsCount}\nIt took you {_quiz.TimeLimit - _time.TotalSeconds} seconds", "Congratulations!", MessageBoxButton.OK, MessageBoxImage.Information);
                 MessageBox.Show($"Quiz finished\nYour result is {correctAnswersCount} out of {AllQuestionsCount}\nIt took you {timeElapsed} seconds", "Congratulations!", MessageBoxButton.OK, MessageBoxImage.Information);
+                CloseQuiz();
                 //close window and show main
-                var thisWindow = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
-                thisWindow.Close();
-                Application.Current.MainWindow.Show();
+                //var thisWindow = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
+                //thisWindow.Close();
+                //Application.Current.MainWindow.Show();
                 return;
             }
             _currentQuestion = _quiz.Questions[_currentQuestionIndex];
@@ -146,5 +154,11 @@ public class TakingAQuizViewModel : NotifyPropertyChangedBase
         {
             MessageBox.Show($"Error {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+    public void CloseQuiz()
+    {
+        var thisWindow = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
+        thisWindow.Close();
+        Application.Current.MainWindow.Show();
     }
 }
