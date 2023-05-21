@@ -9,6 +9,8 @@ namespace Server.Services;
 
 internal interface IQuizService
 {
+    public ICollection<Quiz> GetAll();
+
     public bool Add(Quiz quiz);
     public bool Update(Quiz quiz);
     public bool Delete(Quiz quiz);

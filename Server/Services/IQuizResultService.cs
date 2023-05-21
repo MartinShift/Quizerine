@@ -9,6 +9,6 @@ namespace Server.Services;
 
 internal interface IQuizResultService
 {
-    public ICollection<Quiz> GetAll();
     public bool Add(QuizResult quizResult);
+    public QuizResult? Get(Quiz quiz, string username);
 }
