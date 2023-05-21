@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.DbModels
 {
-    internal class DbAnswer
+    public class DbAnswer
     {
         public int Id { get; set; }
         public string Text { get; set; }

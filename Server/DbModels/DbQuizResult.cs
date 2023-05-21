@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Server.DbModels
 {
-    internal class DbQuizResult
+    public class DbQuizResult
     {
         public int Id { get; set; }
         public string ClientName { get; set; }
-        public Quiz Quiz { get; set; }
+        public DbQuiz Quiz { get; set; }
         public int SecondsSpent { get; set; }
         public int Points { get; set; }
         public int QuizId { get; set; }
