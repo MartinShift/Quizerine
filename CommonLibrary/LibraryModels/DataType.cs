@@ -8,6 +8,6 @@ namespace CommonLibrary.LibraryModels
 {
     public enum DataType
     {
-    
+    QuizResult,AllQuizzesRequest,AddNewQuiz
     }
 }
