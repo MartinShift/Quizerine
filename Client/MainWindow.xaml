@@ -6,8 +6,10 @@
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
         Title="MainWindow" Height="550" Width="800">
-    <Border BorderThickness="2" BorderBrush="BlueViolet">
-        <Grid>
+    <TabControl>
+        <TabItem Header="Main">
+            <Border BorderThickness="2" BorderBrush="BlueViolet">
+                <Grid Background="LightCyan">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5*"></ColumnDefinition>
                 <ColumnDefinition Width="90*"></ColumnDefinition>
@@ -28,34 +30,82 @@
                       SelectedItem="{Binding Path=SelectedQuiz}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <WrapPanel VerticalAlignment="Center">
-                                <Image Source="{Binding Path=Image}" Stretch="UniformToFill" Width="100" Height="100"></Image>
-                                <TextBlock FontSize="30" FontWeight="Bold" TextAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock>#</TextBlock>
-                                    <TextBlock Text="{Binding Path=Id}"></TextBlock>
-                                    <TextBlock Text=" "></TextBlock>
-                                    <TextBlock Text="{Binding Path=Title}"></TextBlock>
-                                    <TextBlock Text=" ("></TextBlock>
-                                    <TextBlock Text="{Binding Path=TimeLimit}"></TextBlock>
-                                    <TextBlock Text=" seconds)"></TextBlock>
-                                </TextBlock>
-                                
-                            </WrapPanel>
-                            <!--<TextBlock FontSize="30" FontWeight="Bold">
-                                <Image Source="{Binding Path=Image}" Stretch="UniformToFill" Width="100" Height="100"></Image>
-                                <TextBlock>#</TextBlock>
-                                <TextBlock Text="{Binding Path=Id}"></TextBlock>
-                                <TextBlock Text=" "></TextBlock>
-                                <TextBlock Text="{Binding Path=Title}"></TextBlock>
-                                <TextBlock Text=" ("></TextBlock>
-                                <TextBlock Text="{Binding Path=TimeLimit}"></TextBlock>
-                                <TextBlock Text=" seconds)"></TextBlock>
-                            </TextBlock>-->
-                        </DataTemplate>
+                                    <WrapPanel VerticalAlignment="Center">
+                                        <Image Source="{Binding Path=Image}" Stretch="UniformToFill" Width="100" Height="100"></Image>
+                                        <TextBlock FontSize="30" FontWeight="Bold" TextAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock>#</TextBlock>
+                                        <TextBlock Text="{Binding Path=Id}"></TextBlock>
+                                        <TextBlock Text=" "></TextBlock>
+                                        <TextBlock Text="{Binding Path=Title}"></TextBlock>
+                                        <TextBlock Text=" ("></TextBlock>
+                                        <TextBlock Text="{Binding Path=TimeLimit}"></TextBlock>
+                                        <TextBlock Text=" seconds)"></TextBlock>
+                                        </TextBlock>
+                                    </WrapPanel>
+                                </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
             </Border>
             <Button Grid.Row="2" Grid.Column="1" Content="Take quiz" Margin="200,10,200,10" FontSize="25" Command="{Binding Path=TakeQuizCommand}"></Button>
         </Grid>
     </Border>
+        </TabItem>
+        <TabItem Header="Records">
+            <Border BorderThickness="2" BorderBrush="BlueViolet">
+                <Grid Background="LightCyan">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"></ColumnDefinition>
+                        <ColumnDefinition Width="90*"></ColumnDefinition>
+                        <ColumnDefinition Width="5*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10*"></RowDefinition>
+                        <RowDefinition Height="90*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <ComboBox Grid.Column="1" Margin="0,5,0,5" ItemsSource="{Binding Path=Quizzes}" SelectedItem="{Binding Path=SelectedQuiz}" FontSize="20">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock Text="{Binding Path=Id}"></TextBlock>
+                                    <TextBlock></TextBlock>
+                                    <TextBlock Text="{Binding Path=Title}"></TextBlock>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <DataGrid Grid.Column="1" Grid.Row="1"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              ItemsSource="{Binding Path=QuizResults}"
+                              SelectedItem="{Binding Path=SelectedQuizResult}"
+                              FontSize="20"
+                              ColumnWidth="*">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PositionInRecordTable}" Value="1">
+                                        <Setter Property="Background" Value="Gold"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding PositionInRecordTable}" Value="2">
+                                        <Setter Property="Background" Value="Silver"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding PositionInRecordTable}" Value="3">
+                                        <Setter Property="Background" Value="DarkOrange"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Position" Binding="{Binding Path=PositionInRecordTable}" Width="15*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nickname" Binding="{Binding Path=ClientName}" Width="45*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Time (s)" Binding="{Binding Path=SecondsSpent}" Width="20*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Score" Binding="{Binding Path=Points}" Width="20*"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    
+                    
+                </Grid>
+            </Border>
+        </TabItem>
+    </TabControl>
 </Window>

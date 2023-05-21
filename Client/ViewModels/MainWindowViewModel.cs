@@ -20,6 +20,7 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
     {
         _allQuizzes = new List<Quiz>();
         _nickname = string.Empty;
+        _allQuizResults = new List<QuizResult>(); 
 
         // TESTING
         Answer answ1 = new Answer()
@@ -110,6 +111,52 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
         _allQuizzes.Add(q3);
 
 
+        QuizResult result1 = new QuizResult
+        {
+            ClientName = "user1",
+            Points = 12,
+            Quiz = q1,
+            SecondsSpent = 33
+        };
+        QuizResult result2 = new QuizResult
+        {
+            ClientName = "mike",
+            Points = 22,
+            Quiz = q1,
+            SecondsSpent = 41
+        };
+        QuizResult result3 = new QuizResult
+        {
+            ClientName = "player_01",
+            Points = 27,
+            Quiz = q1,
+            SecondsSpent = 53
+        };
+        QuizResult result4 = new QuizResult
+        {
+            ClientName = "Corey",
+            Points = 19,
+            Quiz = q1,
+            SecondsSpent = 23
+        };
+        QuizResult result5 = new QuizResult
+        {
+            ClientName = "Corey",
+            Points = 29,
+            Quiz = q2,
+            SecondsSpent = 40
+        };
+
+        _allQuizResults.Add(result1);
+        _allQuizResults.Add(result2);
+        _allQuizResults.Add(result3);
+        _allQuizResults.Add(result4);
+        _allQuizResults.Add(result5);
+
+
+
+        _selectedQuiz = new QuizViewModel(q1); // will be firstordefault from db
+
         // END TESTING
 
 
@@ -137,6 +184,38 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
         {
             _selectedQuiz = value;
             OnPropertyChanged(nameof(SelectedQuiz));
+            OnPropertyChanged(nameof(QuizResults));
+        }
+    }
+    private List<QuizResult> _allQuizResults;
+    public ObservableCollection<QuizResultViewModel> QuizResults
+    {
+        get
+        {
+            var collection = new ObservableCollection<QuizResultViewModel>();
+            var sorted = _allQuizResults.Where(qr => qr.Quiz.Id == _selectedQuiz.Id).OrderByDescending(x => x.Points).ToList();
+            int pos = 1;
+            sorted.ForEach(qr =>
+            {
+                collection.Add(new QuizResultViewModel(qr, pos));
+                pos++;
+            });
+            return collection;
+        }
+        set
+        {
+            QuizResults = value;
+            OnPropertyChanged(nameof(QuizResults));
+        }
+    }
+    private QuizResultViewModel _selectedQuizResult;
+    public QuizResultViewModel SelectedQuizResult
+    {
+        get => _selectedQuizResult;
+        set
+        {
+            _selectedQuizResult = value;
+            OnPropertyChanged(nameof(SelectedQuizResult));
         }
     }
     private string _nickname;

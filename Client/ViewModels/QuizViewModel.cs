@@ -66,4 +66,13 @@ public class QuizViewModel : NotifyPropertyChangedBase
             OnPropertyChanged(nameof(TimeLimit));
         }
     }
+    public override bool Equals(object? obj)
+    {
+        if (obj == null)
+            return false;
+        if (!(obj is QuizViewModel))
+            return false;
+
+        return Model.Id.Equals((obj as QuizViewModel).Model.Id);
+    }
 }
