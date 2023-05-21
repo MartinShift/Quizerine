@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Server.Services;
 
-internal interface IQuizResultService
+public interface IQuizResultService
 {
     public bool Add(QuizResult quizResult);
     public QuizResult? Get(Quiz quiz, string username);

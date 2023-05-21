@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Server.Services;
 
-internal interface IQuizService
+public interface IQuizService
 {
     public ICollection<Quiz> GetAll();
 
