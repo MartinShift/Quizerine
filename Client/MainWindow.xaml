@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="550" Width="800">
     <Border BorderThickness="2" BorderBrush="BlueViolet">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -28,15 +28,29 @@
                       SelectedItem="{Binding Path=SelectedQuiz}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock>
+                            <WrapPanel VerticalAlignment="Center">
+                                <Image Source="{Binding Path=Image}" Stretch="UniformToFill" Width="100" Height="100"></Image>
+                                <TextBlock FontSize="30" FontWeight="Bold" TextAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock>#</TextBlock>
+                                    <TextBlock Text="{Binding Path=Id}"></TextBlock>
+                                    <TextBlock Text=" "></TextBlock>
+                                    <TextBlock Text="{Binding Path=Title}"></TextBlock>
+                                    <TextBlock Text=" ("></TextBlock>
+                                    <TextBlock Text="{Binding Path=TimeLimit}"></TextBlock>
+                                    <TextBlock Text=" seconds)"></TextBlock>
+                                </TextBlock>
+                                
+                            </WrapPanel>
+                            <!--<TextBlock FontSize="30" FontWeight="Bold">
+                                <Image Source="{Binding Path=Image}" Stretch="UniformToFill" Width="100" Height="100"></Image>
                                 <TextBlock>#</TextBlock>
                                 <TextBlock Text="{Binding Path=Id}"></TextBlock>
                                 <TextBlock Text=" "></TextBlock>
                                 <TextBlock Text="{Binding Path=Title}"></TextBlock>
-                                <TextBlock Text=" "></TextBlock>
+                                <TextBlock Text=" ("></TextBlock>
                                 <TextBlock Text="{Binding Path=TimeLimit}"></TextBlock>
-                                <TextBlock Text=" seconds"></TextBlock>
-                            </TextBlock>
+                                <TextBlock Text=" seconds)"></TextBlock>
+                            </TextBlock>-->
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

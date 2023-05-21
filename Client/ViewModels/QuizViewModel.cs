@@ -48,7 +48,7 @@ public class QuizViewModel : NotifyPropertyChangedBase
             OnPropertyChanged(nameof(Questions));
         }
     }
-    public byte?[] Image 
+    public byte[]? Image 
     {
         get => Model.Image;
         set

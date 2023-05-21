@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
 using Client.Windows;
+using System.Windows.Media.Imaging;
+using Client_Wpf.Models;
 
 namespace Client.ViewModels;
 
@@ -49,31 +51,39 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
             IsSelected = false
         };
         var answers = new List<Answer>() {answ1, answ2, answ3, answ4 };
+        BitmapImage image1 = new BitmapImage(new Uri("C:\\Users\\user\\source\\repos\\Quizerine\\Client\\Q1.jpg"));
+        BitmapImage image2 = new BitmapImage(new Uri("C:\\Users\\user\\source\\repos\\Quizerine\\Client\\Q2.jpg"));
+        BitmapImage image3 = new BitmapImage(new Uri("C:\\Users\\user\\source\\repos\\Quizerine\\Client\\Q3.jpg"));
 
         Question quest1 = new Question()
         {
             Id = 0,
             Text = "Question 1",
-            Answers = answers
+            Answers = answers,
+            Image = Helper.ImageToBytes(image1)
         };
         Question quest2 = new Question()
         {
             Id = 1,
             Text = "Question 2",
-            Answers = answers
+            Answers = answers,
+            Image = Helper.ImageToBytes(image2)
         };
         Question quest3 = new Question()
         {
             Id = 2,
             Text = "Question 3",
-            Answers = answers
+            Answers = answers,
+            Image = Helper.ImageToBytes(image3)
         };
         var questions = new List<Question>() { quest1, quest2, quest3 };
-
+        BitmapImage quizImage1 = new BitmapImage(new Uri("C:\\Users\\user\\source\\repos\\Quizerine\\Client\\quiz1.jpg"));
+        BitmapImage quizImage2 = new BitmapImage(new Uri("C:\\Users\\user\\source\\repos\\Quizerine\\Client\\quiz2.png"));
+        BitmapImage quizImage3 = new BitmapImage(new Uri("C:\\Users\\user\\source\\repos\\Quizerine\\Client\\quiz3.png"));
         Quiz q1 = new Quiz()
         {
             Id = 0,
-            Image = null,
+            Image = Helper.ImageToBytes(quizImage1),
             TimeLimit = 30,
             Title = "Test #1",
             Questions = questions
@@ -81,7 +91,7 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
         Quiz q2 = new Quiz()
         {
             Id = 1,
-            Image = null,
+            Image = Helper.ImageToBytes(quizImage2),
             TimeLimit = 60,
             Title = "Test #2",
             Questions = questions
@@ -89,7 +99,7 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
         Quiz q3 = new Quiz()
         {
             Id = 2,
-            Image = null,
+            Image = Helper.ImageToBytes(quizImage3),
             TimeLimit = 90,
             Title = "Test #3",
             Questions = questions

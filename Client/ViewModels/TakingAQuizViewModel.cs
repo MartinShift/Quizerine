@@ -1,4 +1,5 @@
-﻿using CommonLibrary.LibraryModels;
+﻿using Client_Wpf.Models;
+using CommonLibrary.LibraryModels;
 using My.BaseViewModels;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace Client.ViewModels;
@@ -74,6 +76,18 @@ public class TakingAQuizViewModel : NotifyPropertyChangedBase
         get => _secondsLeft;
     }
     private List<bool> _answers;
+    public BitmapImage QuestionImage
+    {
+        get
+        {
+            var image = new BitmapImage();
+            if(_currentQuestion.Image !=null)
+            {
+                return Helper.ImageFromBytes(_currentQuestion.Image);
+            }
+            return image;
+        }
+    }
     public ICommand AnswerACommand => new RelayCommand(x =>
     {
         // register answer
@@ -126,7 +140,7 @@ public class TakingAQuizViewModel : NotifyPropertyChangedBase
             OnPropertyChanged(nameof(AnswerCText));
             OnPropertyChanged(nameof(AnswerDText));
             OnPropertyChanged(nameof(CurrentQuestionNumber));
-
+            OnPropertyChanged(nameof(QuestionImage));
         }
         catch (Exception ex)
         {
