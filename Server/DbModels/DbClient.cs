@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Server.DbModels
 {
-    public class DbQuizResult
+    public class DbClient
     {
-       public DbQuiz Quiz { get; set; }
+        public int Id { get; set; }
+        public string Username { get; set; }
 
     }
 }

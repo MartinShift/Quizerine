@@ -30,9 +30,7 @@ namespace Server.ServerModels
                 {
                     case DataType.QuizResult:
                         //Добавити результат у базу даних
-
-                        //
-                        response = null!;
+                        response = ServerCore.AddQuizResult(message.Data);
                         break;
                     case DataType.AddNewQuiz:
                         //Добавити нову вікторину в базу даних
