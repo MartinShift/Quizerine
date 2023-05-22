@@ -45,15 +45,6 @@ namespace Server.ServerModels
                 Title = result.Title,
                 TimeLimit = result.TimeLimit,
             };
-            result.Questions.ForEach(x=>
-            {
-                Quiz.Questions.Add(x);
-                x.Answers.ForEach(x =>
-                {
-                    Quiz.Questions.Last().Answers.Add(x);
-                });
-            });
-
             var message = new DataMessage()
             {
                 Data = "",

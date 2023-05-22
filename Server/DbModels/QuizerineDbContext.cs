@@ -18,7 +18,7 @@ namespace Server.DbModels
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             //SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlite3());
-            builder.UseSqlite("Data Source=C:\\Users\\kvvkv\\source\\repos\\Quizerine\\quiz.db");
+            builder.UseSqlite("Data Source=D:\\Mein progectos\\Quizerine\\Server\\quiz.db");
         }
 
         public virtual DbSet<DbQuiz> DbQuizzes { get; set; } = null!;

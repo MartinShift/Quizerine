@@ -1,5 +1,4 @@
-﻿using Client_Wpf.Models;
-using CommonLibrary.LibraryModels;
+﻿using CommonLibrary.LibraryModels;
 using ModelLibrary.JsonModels;
 using System;
 using System.Collections.Generic;
