@@ -1,5 +1,6 @@
 ﻿using CommonLibrary.LibraryModels;
 using DbModels.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Server.DbModels;
 using Server.Services.Interfaces;
@@ -18,14 +19,16 @@ namespace Server.Services
         Repository<DbQuestion> questionRepository { get; set; }
         Repository<DbQuizResult> quizResultRepository { get; set; }
         Repository<DbAnswer> answerRepository { get; set; }
+        QuizerineDbContext _context { get; set; }
         public QuizService(QuizerineDbContext quizerineDb)
         {
             quizRepository = new Repository<DbQuiz>(quizerineDb);
             quizResultRepository = new Repository<DbQuizResult>(quizerineDb);
             answerRepository = new Repository<DbAnswer>(quizerineDb);
             questionRepository = new Repository<DbQuestion>(quizerineDb);
+            _context = quizerineDb;
         }
-        public bool HasPassed(string client, int quizid) => quizResultRepository.FindByConditionAsync(qr => qr.ClientName == client && qr.QuizId == quizid).Result != null;
+        public bool HasPassed(string client, int quizid) => quizResultRepository.ExistsAsync(qr => qr.ClientName == client && qr.QuizId == quizid).Result;
         public void Add(Quiz quiz)
         {
             var dbquiz = new DbQuiz()
@@ -96,11 +99,6 @@ namespace Server.Services
             answerRepository.DeleteAsync(answer.Id).Wait();
         }
 
-        public ICollection<DbQuiz> GetAll()
-        {
-            return quizRepository.GetAllAsync().Result;
-        }
-
         public void Update(Quiz quiz)
         {
             var dbquiz = new DbQuiz()
@@ -143,24 +141,29 @@ namespace Server.Services
             answerRepository.AddAsync(dbanswer).Wait();
         }
 
-        public DbQuiz FindQuizByCondition(Expression<Func<DbQuiz, bool>> expression)
+        public ICollection<DbQuiz> FindQuizByCondition(Expression<Func<DbQuiz, bool>> expression)
         {
-            return quizRepository.FindByConditionAsync(expression).Result.First();
+            return _context.DbQuizzes.Where(expression).Include(x => x.Questions).Include(x => x.Results).ToList();
         }
 
-        public DbQuestion FindQuestionByCondition(Expression<Func<DbQuestion, bool>> expression)
+        public ICollection<DbQuestion> FindQuestionByCondition(Expression<Func<DbQuestion, bool>> expression)
         {
-            return questionRepository.FindByConditionAsync(expression).Result.First();
+            return _context.DbQuestions.Where(expression).Include(x => x.Answers).ToList();
         }
 
-        public DbAnswer FindQuestionByCondition(Expression<Func<DbAnswer, bool>> expression)
+        public ICollection<DbAnswer> FindAnswerByCondition(Expression<Func<DbAnswer, bool>> expression)
         {
-            return answerRepository.FindByConditionAsync(expression).Result.First();
+            return answerRepository.FindByConditionAsync(expression).Result;
         }
 
-        public DbQuestion GetQuizQuestion(int quizId)
+        public ICollection<DbQuiz> GetAll()
         {
-            return questionRepository.FindByConditionAsync(x => x.QuizId == quizId).Result.First();
+            return _context.DbQuizzes.Include(x => x.Results).Include(x => x.Questions).ToList();
+        }
+
+        public ICollection<DbQuestion> GetQuizQuestions(int quizId)
+        {
+            return _context.DbQuestions.Where(x => x.QuizId == quizId).Include(x => x.Answers).ToList();
         }
 
         public ICollection<DbAnswer> GetQuestionAnswers(int questionId)
