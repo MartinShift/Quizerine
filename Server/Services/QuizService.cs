@@ -6,6 +6,7 @@ using Server.DbModels;
 using Server.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -39,6 +40,14 @@ namespace Server.Services
                 TimeLimit = quiz.TimeLimit,
             };
             quizRepository.AddAsync(dbquiz).Wait();
+            try
+            {
+                SaveChanges();
+            }
+            catch(DbException e)
+            {
+                throw new Exception("Помилка під час спроби додати вікторину");
+            }
         }
 
         public void Add(Quiz quiz, Question question)
@@ -52,6 +61,14 @@ namespace Server.Services
                 QuizId = quiz.Id,
             };
             questionRepository.AddAsync(dbquestion).Wait();
+            try
+            {
+                SaveChanges();
+            }
+            catch (DbException e)
+            {
+                throw new Exception("Помилка під час спроби додати питання до вікторини");
+            }
         }
         public void Add(int quizId, Question question)
         {
@@ -63,6 +80,14 @@ namespace Server.Services
                 QuizId = quizId,
             };
             questionRepository.AddAsync(dbquestion).Wait();
+            try
+            {
+                SaveChanges();
+            }
+            catch (DbException e)
+            {
+                throw new Exception("Помилка під час спроби додати питання до вікторини");
+            }
         }
 
         public void Add(int quizId, Question question, Answer answer)
@@ -82,21 +107,53 @@ namespace Server.Services
                 IsCorrect = answer.IsCorrect,
             };
             answerRepository.AddAsync(dbanswer).Wait();
+            try
+            {
+                SaveChanges();
+            }
+            catch (DbException e)
+            {
+                throw new Exception("Помилка під час спроби додати питання та відповіді до вікторини");
+            }
         }
 
         public void Delete(Quiz quiz)
         {
             quizRepository.DeleteAsync(quiz.Id).Wait();
+            try
+            {
+                SaveChanges();
+            }
+            catch (DbException e)
+            {
+                throw new Exception("Помилка під час спроби видалити вікторину");
+            }
         }
 
         public void Delete(Question question)
         {
             questionRepository.DeleteAsync(question.Id).Wait();
+            try
+            {
+                SaveChanges();
+            }
+            catch (DbException e)
+            {
+                throw new Exception("Помилка під час спроби видалити питання");
+            }
         }
 
         public void Delete(Answer answer)
         {
             answerRepository.DeleteAsync(answer.Id).Wait();
+            try
+            {
+                SaveChanges();
+            }
+            catch (DbException e)
+            {
+                throw new Exception("Помилка під час спроби видалити відповідь до питання");
+            }
         }
 
         public void Update(Quiz quiz)
@@ -108,6 +165,14 @@ namespace Server.Services
                 TimeLimit = quiz.TimeLimit,
             };
             quizRepository.UpdateAsync(dbquiz).Wait();
+            try
+            {
+                SaveChanges();
+            }
+            catch (DbException e)
+            {
+                throw new Exception("Помилка під час спроби оновити вікторину");
+            }
         }
 
         public void Update(Question question)
@@ -118,6 +183,14 @@ namespace Server.Services
                 Image = question.Image,
             };
             questionRepository.UpdateAsync(dbquestion).Wait();
+            try
+            {
+                SaveChanges();
+            }
+            catch (DbException e)
+            {
+                throw new Exception("Помилка під час спроби оновити питання до вікторини");
+            }
         }
 
         public void Update(Answer answer)
@@ -128,6 +201,14 @@ namespace Server.Services
                 IsCorrect = answer.IsCorrect,
             };
             answerRepository.UpdateAsync(dbanswer).Wait();
+            try
+            {
+                SaveChanges();
+            }
+            catch (DbException e)
+            {
+                throw new Exception("Помилка під час спроби оновити відповідь на питання до вікторини");
+            }
         }
 
         public void Add(int questionId, Answer answer)
@@ -139,6 +220,14 @@ namespace Server.Services
                 QuestionId = questionId,
             };
             answerRepository.AddAsync(dbanswer).Wait();
+            try
+            {
+                SaveChanges();
+            }
+            catch (DbException e)
+            {
+                throw new Exception("Помилка під час спроби додати відповідь до питання до вікторини");
+            }
         }
 
         public ICollection<DbQuiz> FindQuizByCondition(Expression<Func<DbQuiz, bool>> expression)
@@ -169,6 +258,17 @@ namespace Server.Services
         public ICollection<DbAnswer> GetQuestionAnswers(int questionId)
         {
             return answerRepository.FindByConditionAsync(a => a.QuestionId == questionId).Result;
+        }
+        public void SaveChanges()
+        {
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }
