@@ -217,7 +217,7 @@ namespace Server.Services
             {
                 Text = answer.Text,
                 IsCorrect = answer.IsCorrect,
-                QuestionId = questionId,
+                Question = _context.DbQuestions.First(x=> x.Id == questionId),
             };
             answerRepository.AddAsync(dbanswer).Wait();
             try
@@ -247,7 +247,7 @@ namespace Server.Services
 
         public ICollection<DbQuiz> GetAll()
         {
-            return _context.DbQuizzes.Include(x => x.Results).Include(x => x.Questions).ToList();
+            return _context.DbQuizzes.Include(x => x.Results).Include(x => x.Questions).ThenInclude(x=> x.Answers).ToList();
         }
 
         public ICollection<DbQuestion> GetQuizQuestions(int quizId)
@@ -257,7 +257,7 @@ namespace Server.Services
 
         public ICollection<DbAnswer> GetQuestionAnswers(int questionId)
         {
-            return answerRepository.FindByConditionAsync(a => a.QuestionId == questionId).Result;
+            return answerRepository.FindByConditionAsync(a => a.Question.Id == questionId).Result;
         }
         public void SaveChanges()
         {
