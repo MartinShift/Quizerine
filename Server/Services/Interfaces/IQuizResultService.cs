@@ -1,4 +1,5 @@
 ﻿using CommonLibrary.LibraryModels;
+using Server.DbModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,9 @@ namespace Server.Services.Interfaces;
 
 public interface IQuizResultService
 {
-    public bool Add(QuizResult quizResult);
-    public QuizResult? Get(Quiz quiz, string username);
+    public void Add(QuizResult quizResult);
+    public bool HasPassed(string client, Quiz quiz);
+    public ICollection<DbQuizResult> GetAll();
+    public ICollection<DbQuizResult> FindResultsByClient(string client);
+    public ICollection<string> FindClientsByQuiz(int quizId);
 }

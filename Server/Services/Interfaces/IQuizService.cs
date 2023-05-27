@@ -26,6 +26,7 @@ public interface IQuizService
     public void Add(int questionId, Answer answer);
     public void Update(Answer answer);
     public void Delete(Answer answer);
+    public int GetQUizId(Quiz quiz);
     public ICollection<DbQuiz> FindQuizByCondition(Expression<Func<DbQuiz, bool>> expression);
     public ICollection<DbQuestion> FindQuestionByCondition(Expression<Func<DbQuestion, bool>> expression);
     public ICollection<DbAnswer> FindAnswerByCondition(Expression<Func<DbAnswer, bool>> expression);
