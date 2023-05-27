@@ -50,7 +50,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <CheckBox Checked="{Binding Path=IsCorrect}"></CheckBox>
+                            <CheckBox IsChecked="{Binding Path=IsCorrect}"></CheckBox>
                             <TextBox Text="{Binding Path=Text}"></TextBox>
                         </StackPanel>
                     </DataTemplate>
