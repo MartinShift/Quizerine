@@ -158,8 +158,20 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
         _selectedQuiz = new QuizViewModel(q1); // will be firstordefault from db
 
         // END TESTING
+        // load all Quiz
+        // load all QuizResult
 
-
+      
+        //_loadQuizzes();
+        //_loadQuizResults();
+    }
+    private void _loadQuizzes()
+    {
+        _allQuizzes = Client.Models.ServerHelper.GetQuizzes();
+    }
+    private void _loadQuizResults()
+    {
+        //_allQuizResults = ;
     }
     private List<Quiz> _allQuizzes;
     public ObservableCollection<QuizViewModel> Quizzes
@@ -233,8 +245,9 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
         //MessageBox.Show($"Selected quiz: {_selectedQuiz.Title}\nNickName: {_nickname}", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
         // open new quiz window
         Application.Current.MainWindow.Hide();
-        var window = new QuizWindow(_selectedQuiz);
+        var window = new QuizWindow(_selectedQuiz, Nickname);
         window.Show();
-
+        // update QuizResults
+        //_loadQuizResults();
     }, x => _selectedQuiz !=null && _nickname.Length>0);
 }

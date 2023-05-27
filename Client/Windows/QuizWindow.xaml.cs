@@ -20,10 +20,10 @@ namespace Client.Windows
     /// </summary>
     public partial class QuizWindow : Window
     {
-        public QuizWindow(QuizViewModel quiz)
+        public QuizWindow(QuizViewModel quiz, string nickname)
         {
             InitializeComponent();
-            DataContext = new TakingAQuizViewModel(quiz);
+            DataContext = new TakingAQuizViewModel(quiz, nickname);
         }
     }
 }

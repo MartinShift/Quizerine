@@ -15,9 +15,10 @@ namespace Client.ViewModels;
 
 public class TakingAQuizViewModel : NotifyPropertyChangedBase
 {
-    public TakingAQuizViewModel(QuizViewModel quiz)
+    public TakingAQuizViewModel(QuizViewModel quiz, string nickname)
     {
         _quiz = quiz;
+        _nickname = nickname;
         _currentQuestionIndex = 0;
         //_currentQuestion = _quiz.Questions[_currentQuestionIndex];
         _answers = new List<bool>();
@@ -41,6 +42,7 @@ public class TakingAQuizViewModel : NotifyPropertyChangedBase
         _currentQuestion = _quiz.Questions[_currentQuestionIndex];
         _timer.Start();
     }
+    private string _nickname;
     private QuizViewModel _quiz;
     private QuestionViewModel _currentQuestion;
     private DispatcherTimer _timer;
@@ -132,8 +134,19 @@ public class TakingAQuizViewModel : NotifyPropertyChangedBase
                 OnPropertyChanged(nameof(SecondsLeft));
                 var timeElapsed = _quiz.TimeLimit - _time.TotalSeconds;
                 int correctAnswersCount = _answers.Where(a => a).Count();
+                var score = GetScore(timeElapsed, correctAnswersCount);
                 //MessageBox.Show($"Quiz finished\nYour result is {correctAnswersCount} out of {AllQuestionsCount}\nIt took you {_quiz.TimeLimit - _time.TotalSeconds} seconds", "Congratulations!", MessageBoxButton.OK, MessageBoxImage.Information);
-                MessageBox.Show($"Quiz finished\nYour result is {correctAnswersCount} out of {AllQuestionsCount}\nIt took you {timeElapsed} seconds", "Congratulations!", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Quiz finished\nYour result is {correctAnswersCount} out of {AllQuestionsCount}\nIt took you {timeElapsed} seconds.\nYOUR SCORE IS {score}", "Congratulations!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                var result = new QuizResult()
+                {
+                    ClientName = _nickname, 
+                    Quiz = _quiz.Model,
+                    SecondsSpent = (int)timeElapsed,
+                    Points = score
+                };
+                
+                Client.Models.ServerHelper.SendQuizResult(result);
                 CloseQuiz();
                 //close window and show main
                 //var thisWindow = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
@@ -154,6 +167,35 @@ public class TakingAQuizViewModel : NotifyPropertyChangedBase
         {
             MessageBox.Show($"Error {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+    public int GetScore(double timeElapsed, int correctAnswersCount)
+    {
+        int result = 0;
+
+        if(correctAnswersCount==0)
+        {
+            return 0;
+        }
+
+        // LOGIC Let's say each correct answer = 30 points. Each unused second = 2 points.
+
+        // 5/5 correctsAnswers for 30/60 seconds = (5*30) + ((60-30)*2) = 210 points
+        // 3/5 correctsAnswers for 30/60 seconds = (3*30) + ((60-30)*2) = 150 points
+        // 1/5 correctsAnswers for 30/60 seconds = (1*30) + ((60-30)*2) = 90 points
+
+        // 5/5 correctsAnswers for 50/60 seconds = (5*30) + ((60-50)*2) = 170 points
+        // 3/5 correctsAnswers for 50/60 seconds = (3*30) + ((60-50)*2) = 110 points
+        // 1/5 correctsAnswers for 50/60 seconds = (1*30) + ((60-50)*2) = 50 points
+
+        int pointForCorrectsAnswer = 30;
+        int pointForUnusedSecond = 2;
+
+        var correctAnswersPoints = correctAnswersCount * pointForCorrectsAnswer;
+        var unusedTimePoints = (_quiz.TimeLimit - (int)timeElapsed) * pointForUnusedSecond;
+        
+        result = correctAnswersPoints + unusedTimePoints;
+
+        return result;
     }
     public void CloseQuiz()
     {
