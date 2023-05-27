@@ -41,6 +41,16 @@ namespace Client.Models
             var response = SendToServer(datamessage);
             return JsonSerializer.Deserialize<List<Quiz>>(response.Data);
         }
+        public static List<QuizResult> GetQuizResults()
+        {
+            var datamessage = new DataMessage()
+            {
+                Data = "",
+                Type = DataType.AllQuizResultsRequest
+            };
+            var response = SendToServer(datamessage);
+            return JsonSerializer.Deserialize<List<QuizResult>>(response.Data);
+        }
         public static DataMessage SendToServer(DataMessage message)
         {
             var Ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
@@ -54,6 +64,15 @@ namespace Client.Models
             var responsestr = Encoding.UTF8.GetString(response, 0, read);
             socket.Close();
             return JsonSerializer.Deserialize<DataMessage>(responsestr);
+        }
+        public static void UpdateQuiz(Quiz quiz)
+        {
+            var datamessage = new DataMessage()
+            {
+                Data = JsonSerializer.Serialize(quiz),
+                Type = DataType.UpdateQuiz
+            }; 
+            SendToServer(datamessage);
         }
     }
 }

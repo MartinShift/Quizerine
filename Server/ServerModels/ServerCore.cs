@@ -1,6 +1,7 @@
 ﻿using CommonLibrary.LibraryModels;
 using ModelLibrary.JsonModels;
 using Server.DbModels;
+using Server.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,8 @@ namespace Server.ServerModels
 {
     public static class ServerCore
     {
-        public static string AddQuizResult(string resultData)
+        public static string AddQuizResult(QuizResult result)
         {
-            var result = JsonSerializer.Deserialize<QuizResult>(resultData);
             //  var context = new QuizerineDbContext();
             var dbresult = new QuizResult()
             {
@@ -35,25 +35,11 @@ namespace Server.ServerModels
             };
             return JsonSerializer.Serialize(message);
         }
-        public static string AddNewQuiz(string quizData)
+        public static string AddNewQuiz(Quiz quiz)
         {
-            var result = JsonSerializer.Deserialize<Quiz>(quizData);
-            // var context = new QuizerineDbContext();
-            var Quiz = new DbQuiz
-            {
-                Image = result.Image,
-                Title = result.Title,
-                TimeLimit = result.TimeLimit,
-            };
-            result.Questions.ForEach(x =>
-            {
-                // Quiz.Questions.AddAsync(x);
-                //   x.Answers.ForEach(x =>
-                //        {
-                //          Quiz.Questions.Last().Answers.Add(x);
-                //       });
-            });
-
+            var context = new QuizerineDbContext();
+            var service = new QuizService(context);
+            service.Add(quiz);
             var message = new DataMessage()
             {
                 Data = "",
