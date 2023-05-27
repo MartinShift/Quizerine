@@ -2,8 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Client"
+             xmlns:local1="clr-namespace:Client.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <local1:MultiValueEqualityConverter x:Key="multiValueEqualityConverter"/>
     </Application.Resources>
 </Application>

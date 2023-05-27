@@ -146,16 +146,56 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
             Quiz = q2,
             SecondsSpent = 40
         };
+        QuizResult result6 = new QuizResult
+        {
+            ClientName = "DwightSchrute",
+            Points = 41,
+            Quiz = q1,
+            SecondsSpent = 37
+        };
+        QuizResult result7 = new QuizResult
+        {
+            ClientName = "Vessel",
+            Points = 39,
+            Quiz = q1,
+            SecondsSpent = 43
+        };
+        QuizResult result8 = new QuizResult
+        {
+            ClientName = "DwightSchrute",
+            Points = 32,
+            Quiz = q2,
+            SecondsSpent = 38
+        };
+        QuizResult result9 = new QuizResult
+        {
+            ClientName = "mike",
+            Points = 28,
+            Quiz = q3,
+            SecondsSpent = 36
+        };
+        QuizResult result10 = new QuizResult
+        {
+            ClientName = "keychron",
+            Points = 38,
+            Quiz = q1,
+            SecondsSpent = 47
+        };
 
         _allQuizResults.Add(result1);
         _allQuizResults.Add(result2);
         _allQuizResults.Add(result3);
         _allQuizResults.Add(result4);
         _allQuizResults.Add(result5);
+        _allQuizResults.Add(result6);
+        _allQuizResults.Add(result7);
+        _allQuizResults.Add(result8);
+        _allQuizResults.Add(result9);
+        _allQuizResults.Add(result10);
 
 
 
-        _selectedQuiz = new QuizViewModel(q1); // will be firstordefault from db
+        _selectedQuizForResults = new QuizViewModel(q1); // will be firstordefault from db
 
         // END TESTING
         // load all Quiz
@@ -171,22 +211,48 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
     }
     private void _loadQuizResults()
     {
-        //_allQuizResults = ;
+        _allQuizResults = Client.Models.ServerHelper.GetQuizResults();
     }
     private List<Quiz> _allQuizzes;
-    public ObservableCollection<QuizViewModel> Quizzes
+    public ObservableCollection<QuizViewModel> Quizzes   // quizzes filtered for user (nickname)
     {
        get
        {
             var collection = new ObservableCollection<QuizViewModel>();
-            _allQuizzes.ForEach(q => collection.Add(new QuizViewModel(q)));
+            _allQuizzes.ForEach(q =>
+            {
+                if (_allQuizResults != null)
+                {
+                    if (_allQuizResults.Where(qr => qr.Quiz.Id==q.Id).FirstOrDefault(x => x.ClientName == _nickname) == null)
+                    {
+                        collection.Add(new QuizViewModel(q));
+                    }
+                }
+            });
             return collection;
-       }
+        }
        set
        {
             Quizzes = value;
             OnPropertyChanged(nameof(Quizzes));
        }
+    }
+    public ObservableCollection<QuizViewModel> QuizzesForResults    // all quizzes
+    {
+        get
+        {
+            var collection = new ObservableCollection<QuizViewModel>();
+            _allQuizzes.ForEach(q =>
+            {
+                collection.Add(new QuizViewModel(q));
+            });
+            return collection;
+        }
+        set
+        {
+            QuizzesForResults = value;
+            OnPropertyChanged(nameof(QuizzesForResults));
+        }
     }
     private QuizViewModel _selectedQuiz;
     public QuizViewModel SelectedQuiz
@@ -196,6 +262,17 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
         {
             _selectedQuiz = value;
             OnPropertyChanged(nameof(SelectedQuiz));
+            //OnPropertyChanged(nameof(QuizResults));
+        }
+    }
+    private QuizViewModel _selectedQuizForResults;
+    public QuizViewModel SelectedQuizForResults
+    {
+        get => _selectedQuizForResults;
+        set
+        {
+            _selectedQuizForResults = value;
+            OnPropertyChanged(nameof(SelectedQuizForResults));
             OnPropertyChanged(nameof(QuizResults));
         }
     }
@@ -205,7 +282,11 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
         get
         {
             var collection = new ObservableCollection<QuizResultViewModel>();
-            var sorted = _allQuizResults.Where(qr => qr.Quiz.Id == _selectedQuiz.Id).OrderByDescending(x => x.Points).ToList();
+            if(_selectedQuizForResults == null)
+            {
+                _selectedQuizForResults = new QuizViewModel(_allQuizzes.FirstOrDefault());
+            }
+            var sorted = _allQuizResults.Where(qr => qr.Quiz.Id == _selectedQuizForResults.Id).OrderByDescending(x => x.Points).ToList();
             int pos = 1;
             sorted.ForEach(qr =>
             {
@@ -238,8 +319,21 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
         {
             _nickname = value; 
             OnPropertyChanged(nameof(Nickname));
+            OnPropertyChanged(nameof(Quizzes));
         }
     }
+    //public ICommand CheckNicknameCommand => new RelayCommand(x =>
+    //{
+    //    if(_allQuizResults.FirstOrDefault(x => x.ClientName == _nickname) == null)
+    //    {
+    //        // new user => all quizzes are avilable
+    //    }
+    //    else
+    //    {
+    //        // filter Quizzes
+    //        OnPropertyChanged(nameof(Quizzes));
+    //    }
+    //}, x => _nickname.Length > 0);
     public ICommand TakeQuizCommand => new RelayCommand(x =>
     {
         //MessageBox.Show($"Selected quiz: {_selectedQuiz.Title}\nNickName: {_nickname}", "Info", MessageBoxButton.OK, MessageBoxImage.Information);

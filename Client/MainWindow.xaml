@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
+        xmlns:local1="clr-namespace:Client.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="550" Width="800">
     <TabControl>
@@ -22,12 +23,14 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="25">
                 <TextBlock Text="Your name:"></TextBlock>
-                <TextBox Grid.Row="0" Grid.Column="0" Width="500" Text="{Binding Path=Nickname, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <TextBox Grid.Row="0" Grid.Column="0" Width="500" Text="{Binding Path=Nickname, UpdateSourceTrigger=PropertyChanged}" Background="#f2ffff"></TextBox>
+                <!--<Button Background="#b3cccc" Command="{Binding Path=CheckNicknameCommand}">Check</Button>-->
             </TextBlock>
             <Border Grid.Row="1" Grid.Column="1"  BorderThickness="1" BorderBrush="BlueViolet">
                 <ListView Grid.Row="1" Grid.Column="1"
                       ItemsSource="{Binding Path=Quizzes}" 
-                      SelectedItem="{Binding Path=SelectedQuiz}">
+                      SelectedItem="{Binding Path=SelectedQuiz}"
+                      Background="#f2ffff">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                                     <WrapPanel VerticalAlignment="Center">
@@ -46,11 +49,11 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </Border>
-            <Button Grid.Row="2" Grid.Column="1" Content="Take quiz" Margin="200,10,200,10" FontSize="25" Command="{Binding Path=TakeQuizCommand}"></Button>
+                    <Button Grid.Row="2" Grid.Column="1" Content="Take quiz" Margin="200,10,200,10" FontSize="25" Command="{Binding Path=TakeQuizCommand}" Background="#b3cccc"></Button>
         </Grid>
     </Border>
         </TabItem>
-        <TabItem Header="Records">
+        <TabItem Header="Records" Height="20" VerticalAlignment="Top">
             <Border BorderThickness="2" BorderBrush="BlueViolet">
                 <Grid Background="LightCyan">
                     <Grid.ColumnDefinitions>
@@ -62,7 +65,7 @@
                         <RowDefinition Height="10*"></RowDefinition>
                         <RowDefinition Height="90*"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <ComboBox Grid.Column="1" Margin="0,5,0,5" ItemsSource="{Binding Path=Quizzes}" SelectedItem="{Binding Path=SelectedQuiz}" FontSize="20">
+                    <ComboBox Grid.Column="1" Margin="0,5,0,5" ItemsSource="{Binding Path=QuizzesForResults}" SelectedItem="{Binding Path=SelectedQuizForResults}" FontSize="20">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock>
@@ -79,7 +82,9 @@
                               ItemsSource="{Binding Path=QuizResults}"
                               SelectedItem="{Binding Path=SelectedQuizResult}"
                               FontSize="20"
-                              ColumnWidth="*">
+                              ColumnWidth="*"
+                              Background="#f2ffff"
+                              HeadersVisibility="Column">
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
                                 <Style.Triggers>
@@ -91,6 +96,17 @@
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding PositionInRecordTable}" Value="3">
                                         <Setter Property="Background" Value="DarkOrange"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Value="True">
+                                        <DataTrigger.Binding>
+                                            <MultiBinding Converter="{StaticResource multiValueEqualityConverter}">
+                                                <Binding Path="ClientName"></Binding>
+                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}" Path="DataContext.Nickname"></Binding>
+                                            </MultiBinding>
+                                        </DataTrigger.Binding>
+                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"></Setter>
+                                        <Setter Property="BorderThickness" Value="2"></Setter>
+                                        <Setter Property="FontWeight" Value="Bold"></Setter>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
