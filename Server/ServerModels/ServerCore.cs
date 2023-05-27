@@ -47,12 +47,56 @@ namespace Server.ServerModels
             };
             return JsonSerializer.Serialize(message);
         }
-        public static string GetAllQuizzes()
+        public static List<Quiz> GetAllQuizzes()
         {
-            // var context = new QuizerineDbContext();
-            //TODO взяти всі вікторини
+             var context = new QuizerineDbContext();
+            var service = new QuizService(context);
+            var quizzes = service.GetAll();
+            var res = quizzes.Select(x => new Quiz()
+            {
+                Id = x.Id,
+                Image = x.Image,
+                TimeLimit = x.TimeLimit,
+                Title = x.Title,
+                Questions = x.Questions.Select(q => new Question
+                {
+                    Id = q.Id,
+                    Image = q.Image,
+                    Text = q.Text,
+                    Answers = q.Answers.Select(a => new Answer 
+                    {
+                        Id = a.Id,
+                        IsCorrect = a.IsCorrect,
+                        Text = a.Text,
+                    }).ToList(),
+                    
+                }).ToList()
+            }) ;
+            var message = new DataMessage()
+            {
+                //TODO серіалізувати всі вікторини в Data
+                //Data = ,
+                // Type = DataType.AllQuizzesRequest
+            };
+            return res;
+        }
+        public static List<QuizResult> GetAllQuizResults()
+        {
+
+            var quizzes = GetAllQuizzes();
+            var context = new QuizerineDbContext();
+            
+            var results = new List<QuizResult>(); 
+            //Коли буде готовий QuizResultService зробити заповнення results
 
             //
+            return results;
+        }
+        public static string UpdateQuiz(Quiz quiz)
+        {
+            var context = new QuizerineDbContext();
+            var dbquiz = context.DbQuizzes.First(x=> x.Id == quiz.Id);
+            
             var message = new DataMessage()
             {
                 //TODO серіалізувати всі вікторини в Data
@@ -61,5 +105,6 @@ namespace Server.ServerModels
             };
             return JsonSerializer.Serialize(message);
         }
+
     }
 }

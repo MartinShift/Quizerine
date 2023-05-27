@@ -30,29 +30,31 @@ namespace Server.ServerModels
                 {
                     case DataType.QuizResult:
                         //Добавити результат у базу даних
-                        response = ServerCore.AddQuizResult(message.Data);
+                        var result = JsonSerializer.Deserialize<QuizResult>(message.Data);
+                        response = ServerCore.AddQuizResult(result);
                         break;
                     case DataType.AddNewQuiz:
-                        //Добавити нову вікторину в базу даних
-
-                        //
-                        response = null!;
+                        var quiz = JsonSerializer.Deserialize<Quiz>(message.Data);
+                        response = ServerCore.AddNewQuiz(quiz);
                         break;
                     case DataType.AllQuizzesRequest:
                         //Взяти всі(або деякі) Вікторини з бази даних
-
+                        var quizzes = ServerCore.GetAllQuizzes();
+                        response = JsonSerializer.Serialize(quizzes);
                         //
                         response = null!;
                         break;
                     case DataType.AllQuizResultsRequest:
-                        //Взяти всі(або деякі) Вікторини з бази даних
-
+                        //Взяти всі(або деякі) Вікторини з бази даних
+                        var quizresults = ServerCore.GetAllQuizResults();
+                        response = JsonSerializer.Serialize(quizresults);
                         //
                         response = null!;
                         break;
                     case DataType.UpdateQuiz:
-                        //Взяти всі(або деякі) Вікторини з бази даних
-
+                        //Взяти всі(або деякі) Вікторини з бази даних
+                        var update = JsonSerializer.Deserialize<Quiz>(message.Data);
+                        response = ServerCore.UpdateQuiz(update);
                         //
                         response = null!;
                         break;
