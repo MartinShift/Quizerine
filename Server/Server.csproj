@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DbModels\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
