@@ -11,20 +11,20 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace CreatorClient
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Логика взаимодействия для CreateQuiz.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class CreateQuiz : Window
     {
-        public MainWindow()
+        public CreateQuiz(QuizViewModel viewModel)
         {
+            DataContext = viewModel;
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
         }
+
     }
 }
