@@ -78,7 +78,7 @@ namespace Server.ServerModels
                 //Data = ,
                 // Type = DataType.AllQuizzesRequest
             };
-            return res;
+            return null;
         }
         public static List<QuizResult> GetAllQuizResults()
         {
