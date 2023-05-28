@@ -15,14 +15,13 @@ namespace Server.ServerModels
     {
         public static string AddQuizResult(QuizResult result)
         {
-            //  var context = new QuizerineDbContext();
-            var dbresult = new QuizResult()
+            var context = new QuizerineDbContext();
+            var dbresult = new DbQuizResult()
             {
                 SecondsSpent = result.SecondsSpent,
                 ClientName = result.ClientName,
                 Points = result.Points,
-                //Знайти в ДБ вікторину з таким самим Id
-                //Quiz = 
+                Quiz = context.DbQuizzes.First(x=> x.Id == result.Quiz.Id)
             };
             //TODO додати результат в базу даних
 
@@ -31,7 +30,7 @@ namespace Server.ServerModels
             var message = new DataMessage()
             {
                 Data = "",
-                //      Type = DataType.QuizResult
+                Type = DataType.QuizResult
             };
             return JsonSerializer.Serialize(message);
         }

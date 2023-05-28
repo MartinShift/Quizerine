@@ -31,7 +31,7 @@ namespace Server.Services
         {
             var dbquiz = new DbQuiz()
             {
-                Id = quiz.Id,
+                Id = (int)quiz.Id,
                 Title = quiz.Title,
                 Image = quiz.Image,
                 TimeLimit = quiz.TimeLimit,
@@ -55,7 +55,7 @@ namespace Server.Services
                 Id = question.Id,
                 Text = question.Text,
                 Image = question.Image,
-                QuizId = quiz.Id,
+                QuizId = (int)quiz.Id,
             };
             questionRepository.AddAsync(dbquestion).Wait();
             try
@@ -116,7 +116,7 @@ namespace Server.Services
 
         public void Delete(Quiz quiz)
         {
-            quizRepository.DeleteAsync(quiz.Id).Wait();
+            quizRepository.DeleteAsync((int)quiz.Id).Wait();
             try
             {
                 SaveChanges();
