@@ -37,47 +37,60 @@ public class ServerCore
         //TODO додати результат в базу даних
 
 
-        //
-        var message = new DataMessage()
-        {
-            Data = "",
-            //      Type = DataType.QuizResult
-        };
-        return JsonSerializer.Serialize(message);
-    }
- 
-    public DataMessage GetAllQuizzes()
-    {
-        var quizzes = _quizService.GetAll();
-        var res = quizzes.Select(x => new Quiz()
-        {
-            Id = x.Id,
-            Image = x.Image,
-            TimeLimit = x.TimeLimit,
-            Title = x.Title,
-            Questions = x.Questions.Select(q => new Question
+            //
+            var message = new DataMessage()
             {
-                Id = q.Id,
-                Image = q.Image,
-                Text = q.Text,
-                Answers = q.Answers.Select(a => new Answer 
-                {
-                    Id = a.Id,
-                    IsCorrect = a.IsCorrect,
-                    Text = a.Text,
-                }).ToList(),
-                
-            }).ToList()
-        }) ;
-        var message = new DataMessage()
+                Data = "",
+                //      Type = DataType.QuizResult
+            };
+            return JsonSerializer.Serialize(message);
+        }
+        public static string AddNewQuiz(Quiz quiz)
         {
-            Data = JsonSerializer.Serialize(res.ToList()),
-            Type = DataType.AllQuizzesRequest
-        }; 
-        return  message;
-    }
-    public string GetAllQuizResults()
-    {
+            var context = new QuizerineDbContext();
+            var service = new QuizService(context);
+            service.Add(quiz);
+            var message = new DataMessage()
+            {
+                Data = "",
+                Type = DataType.AddNewQuiz
+            };
+            return JsonSerializer.Serialize(message);
+        }
+        public static string GetAllQuizzes()
+        {
+             var context = new QuizerineDbContext();
+            var service = new QuizService(context);
+            var quizzes = service.GetAll();
+            var res = quizzes.Select(x => new Quiz()
+            {
+                Id = x.Id,
+                Image = x.Image,
+                TimeLimit = x.TimeLimit,
+                Title = x.Title,
+                Questions = x.Questions.Select(q => new Question
+                {
+                    Id = q.Id,
+                    Image = q.Image,
+                    Text = q.Text,
+                    Answers = q.Answers.Select(a => new Answer 
+                    {
+                        Id = a.Id,
+                        IsCorrect = a.IsCorrect,
+                        Text = a.Text,
+                    }).ToList(),
+                    
+                }).ToList()
+            }) ;
+            var message = new DataMessage()
+            {
+                Data = JsonSerializer.Serialize(res.ToList()),
+                Type = DataType.AllQuizzesRequest
+            }; 
+            return  JsonSerializer.Serialize(message);
+        }
+        public static string GetAllQuizResults()
+        {
 
         var quizzes = GetAllQuizzes();
         

@@ -13,6 +13,7 @@ namespace Client.Models
 {
     public static class ServerHelper
     {
+        //Results
         public static void SendQuizResult(QuizResult message)
         {
             var datamessage = new DataMessage()
@@ -22,6 +23,18 @@ namespace Client.Models
             };
             SendToServer(datamessage);
         }
+        public static List<QuizResult> GetQuizResults()
+        {
+            var datamessage = new DataMessage()
+            {
+                Data = "",
+                Type = DataType.AllQuizResultsRequest
+            };
+            var response = SendToServer(datamessage);
+            return JsonSerializer.Deserialize<List<QuizResult>>(response.Data);
+        } 
+     
+        //Quizzes
         public static void SendNewQuiz(Quiz message)
         {
             var datamessage = new DataMessage()
@@ -42,15 +55,14 @@ namespace Client.Models
             var data = JsonSerializer.Deserialize<List<Quiz>>(response.Data);
             return data;
         }
-        public static List<QuizResult> GetQuizResults()
+        public static void UpdateQuiz(Quiz quiz)
         {
             var datamessage = new DataMessage()
             {
-                Data = "",
-                Type = DataType.AllQuizResultsRequest
-            };
-            var response = SendToServer(datamessage);
-            return JsonSerializer.Deserialize<List<QuizResult>>(response.Data);
+                Data = JsonSerializer.Serialize(quiz),
+                Type = DataType.UpdateQuiz
+            }; 
+            SendToServer(datamessage);
         }
         public static DataMessage SendToServer(DataMessage message)
         {
@@ -66,14 +78,6 @@ namespace Client.Models
             socket.Close();
             return JsonSerializer.Deserialize<DataMessage>(responsestr);
         }
-        public static void UpdateQuiz(Quiz quiz)
-        {
-            var datamessage = new DataMessage()
-            {
-                Data = JsonSerializer.Serialize(quiz),
-                Type = DataType.UpdateQuiz
-            }; 
-            SendToServer(datamessage);
-        }
+       
     }
 }
