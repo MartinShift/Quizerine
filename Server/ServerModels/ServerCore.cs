@@ -43,11 +43,11 @@ namespace Server.ServerModels
             var message = new DataMessage()
             {
                 Data = "",
-                //    Type = DataType.AddNewQuiz
+                Type = DataType.AddNewQuiz
             };
             return JsonSerializer.Serialize(message);
         }
-        public static List<Quiz> GetAllQuizzes()
+        public static string GetAllQuizzes()
         {
              var context = new QuizerineDbContext();
             var service = new QuizService(context);
@@ -74,13 +74,12 @@ namespace Server.ServerModels
             }) ;
             var message = new DataMessage()
             {
-                //TODO серіалізувати всі вікторини в Data
-                //Data = ,
-                // Type = DataType.AllQuizzesRequest
-            };
-            return res;
+                Data = JsonSerializer.Serialize(res.ToList()),
+                Type = DataType.AllQuizzesRequest
+            }; 
+            return  JsonSerializer.Serialize(message);
         }
-        public static List<QuizResult> GetAllQuizResults()
+        public static string GetAllQuizResults()
         {
 
             var quizzes = GetAllQuizzes();
@@ -90,7 +89,7 @@ namespace Server.ServerModels
             //Коли буде готовий QuizResultService зробити заповнення results
 
             //
-            return results;
+            return  JsonSerializer.Serialize(results.ToList());
         }
         public static string UpdateQuiz(Quiz quiz)
         {
@@ -105,6 +104,5 @@ namespace Server.ServerModels
             };
             return JsonSerializer.Serialize(message);
         }
-
     }
 }
