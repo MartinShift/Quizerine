@@ -254,7 +254,7 @@ namespace Server.Services
 
         public ICollection<DbAnswer> GetQuestionAnswers(int questionId)
         {
-            return answerRepository.FindByConditionAsync(a => a.QuestionId == questionId).Result;
+            return answerRepository.FindByConditionAsync(a => a.Question.Id == questionId).Result;
         }
         public void SaveChanges()
         {

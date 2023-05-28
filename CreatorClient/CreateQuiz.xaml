@@ -1,0 +1,61 @@
+﻿<Window x:Class="CreatorClient.CreateQuiz"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CreatorClient"
+        mc:Ignorable="d"
+        Title="CreateQuiz" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20*"></RowDefinition>
+            <RowDefinition Height="80*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30*"></ColumnDefinition>
+            <ColumnDefinition Width="30*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
+            <TextBlock>Title</TextBlock>
+            <TextBox Text="{Binding Path=Title, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBlock>Time (seconds)</TextBlock>
+            <TextBox Text="{Binding Path=TimeLimit, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        </StackPanel>
+        <StackPanel Grid.Column="0" Grid.Row="1">
+            <TextBlock>Questions</TextBlock>
+            <ListView MinHeight="300"
+                ItemsSource="{Binding Path=Questions}" SelectedItem="{Binding Path=SelectedQuestion}">
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Delete"></MenuItem>
+                        <MenuItem Header="Add"  Command="{Binding Path=CreateQuestion}"></MenuItem>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBox Text="{Binding Path=Text, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <TextBlock>Answers</TextBlock>
+            <ListView MinHeight="300" ItemsSource="{Binding Path=SelectedQuestion.Answers}">
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Delete"></MenuItem>
+                        <MenuItem Header="Add" ></MenuItem>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <CheckBox IsChecked="{Binding Path=IsCorrect}"></CheckBox>
+                            <TextBox Text="{Binding Path=Text}"></TextBox>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+    </Grid>
+</Window>

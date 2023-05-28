@@ -1,6 +1,7 @@
 ﻿using CommonLibrary.LibraryModels;
 using ModelLibrary.JsonModels;
 using Server.DbModels;
+using Server.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,8 @@ namespace Server.ServerModels
 {
     public static class ServerCore
     {
-        public static string AddQuizResult(string resultData)
+        public static string AddQuizResult(QuizResult result)
         {
-            var result = JsonSerializer.Deserialize<QuizResult>(resultData);
             //  var context = new QuizerineDbContext();
             var dbresult = new QuizResult()
             {
@@ -35,25 +35,11 @@ namespace Server.ServerModels
             };
             return JsonSerializer.Serialize(message);
         }
-        public static string AddNewQuiz(string quizData)
+        public static string AddNewQuiz(Quiz quiz)
         {
-            var result = JsonSerializer.Deserialize<Quiz>(quizData);
-            // var context = new QuizerineDbContext();
-            var Quiz = new DbQuiz
-            {
-                Image = result.Image,
-                Title = result.Title,
-                TimeLimit = result.TimeLimit,
-            };
-            result.Questions.ForEach(x =>
-            {
-                // Quiz.Questions.AddAsync(x);
-                //   x.Answers.ForEach(x =>
-                //        {
-                //          Quiz.Questions.Last().Answers.Add(x);
-                //       });
-            });
-
+            var context = new QuizerineDbContext();
+            var service = new QuizService(context);
+            service.Add(quiz);
             var message = new DataMessage()
             {
                 Data = "",
@@ -61,12 +47,56 @@ namespace Server.ServerModels
             };
             return JsonSerializer.Serialize(message);
         }
-        public static string GetAllQuizzes()
+        public static List<Quiz> GetAllQuizzes()
         {
-            // var context = new QuizerineDbContext();
-            //TODO взяти всі вікторини
+             var context = new QuizerineDbContext();
+            var service = new QuizService(context);
+            var quizzes = service.GetAll();
+            var res = quizzes.Select(x => new Quiz()
+            {
+                Id = x.Id,
+                Image = x.Image,
+                TimeLimit = x.TimeLimit,
+                Title = x.Title,
+                Questions = x.Questions.Select(q => new Question
+                {
+                    Id = q.Id,
+                    Image = q.Image,
+                    Text = q.Text,
+                    Answers = q.Answers.Select(a => new Answer 
+                    {
+                        Id = a.Id,
+                        IsCorrect = a.IsCorrect,
+                        Text = a.Text,
+                    }).ToList(),
+                    
+                }).ToList()
+            }) ;
+            var message = new DataMessage()
+            {
+                //TODO серіалізувати всі вікторини в Data
+                //Data = ,
+                // Type = DataType.AllQuizzesRequest
+            };
+            return res;
+        }
+        public static List<QuizResult> GetAllQuizResults()
+        {
+
+            var quizzes = GetAllQuizzes();
+            var context = new QuizerineDbContext();
+            
+            var results = new List<QuizResult>(); 
+            //Коли буде готовий QuizResultService зробити заповнення results
 
             //
+            return results;
+        }
+        public static string UpdateQuiz(Quiz quiz)
+        {
+            var context = new QuizerineDbContext();
+            var dbquiz = context.DbQuizzes.First(x=> x.Id == quiz.Id);
+            
             var message = new DataMessage()
             {
                 //TODO серіалізувати всі вікторини в Data
@@ -75,5 +105,6 @@ namespace Server.ServerModels
             };
             return JsonSerializer.Serialize(message);
         }
+
     }
 }
