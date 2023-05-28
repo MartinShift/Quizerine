@@ -362,4 +362,3 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /quiz.db
-/Server/ServerModels/QuizServer.cs
