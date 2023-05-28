@@ -39,7 +39,8 @@ namespace Client.Models
                 Type = DataType.AllQuizzesRequest
             };
             var response = SendToServer(datamessage);
-            return JsonSerializer.Deserialize<List<Quiz>>(response.Data);
+            var data = JsonSerializer.Deserialize<List<Quiz>>(response.Data);
+            return data;
         }
         public static List<QuizResult> GetQuizResults()
         {
@@ -59,7 +60,7 @@ namespace Client.Models
             var str = JsonSerializer.Serialize(message);
             var bytes = Encoding.UTF8.GetBytes(str);
             socket.Send(bytes);
-            var response = new byte[10000000];
+            var response = new byte[100000];
             var read = socket.Receive(response);
             var responsestr = Encoding.UTF8.GetString(response, 0, read);
             socket.Close();

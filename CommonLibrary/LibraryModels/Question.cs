@@ -12,7 +12,7 @@ namespace CommonLibrary.LibraryModels
         {
             Answers = new List<Answer>();
         }
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Text { get; set; }
         public List<Answer> Answers { get; set; }
         public byte?[] Image { get; set; }

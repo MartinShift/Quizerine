@@ -13,6 +13,8 @@ public interface IQuizService
 {
     public ICollection<DbQuiz> GetAll();
 
+    public void Load(Quiz quiz);
+
     public void Add(Quiz quiz);
     public void Update(Quiz quiz);
     public void Delete(Quiz quiz);

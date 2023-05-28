@@ -17,8 +17,8 @@
                     <ColumnDefinition Width="70*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Row="0" Grid.Column="0">
-                    <TextBlock>Search</TextBlock>
-                    <TextBox></TextBox>
+                    <Button Command="{Binding Path=SaveToServer}">Save to server</Button>
+                    <Button Command="{Binding Path=LoadFromServer}">Load</Button>
                 </StackPanel>
                 <DataGrid AutoGenerateColumns="False" 
                   IsReadOnly="True"

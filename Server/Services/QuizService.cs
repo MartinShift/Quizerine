@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Server.Services
 {
-    internal class QuizService : IQuizService
+    public class QuizService : IQuizService
     {
         Repository<DbQuiz> quizRepository { get; set; }
         Repository<DbQuestion> questionRepository { get; set; }
@@ -31,7 +31,6 @@ namespace Server.Services
         {
             var dbquiz = new DbQuiz()
             {
-                Id = quiz.Id,
                 Title = quiz.Title,
                 Image = quiz.Image,
                 TimeLimit = quiz.TimeLimit,
@@ -47,15 +46,96 @@ namespace Server.Services
             }
         }
 
+        // new quiz - new question - new answers
+        // exist quize - exist+new question - exist+new answer
+        public void Load(Quiz quiz)
+        {
+
+            DbQuiz dbQuiz;
+            
+            if (quiz.Id == null)
+            {
+                // no quiz id - new quiz
+                dbQuiz = new DbQuiz
+                {
+                    Title = quiz.Title,
+                    TimeLimit = quiz.TimeLimit,
+                    Image = quiz.Image
+                };
+                quiz.Questions.ForEach(q =>
+                {
+                    var dbQuestion = new DbQuestion()
+                    {
+                        Text = q.Text,
+                    };
+                    dbQuiz.Questions.Add(dbQuestion);
+                    q.Answers.ForEach(a => {
+                        var dbAnswer = new DbAnswer()
+                        {
+                            IsCorrect = a.IsCorrect,
+                            Text = a.Text
+                        };
+                        dbQuestion.Answers.Add(dbAnswer);
+                    });
+
+                });
+                _context.Add(dbQuiz);
+            }
+            else
+            {
+                // has quiz id - exist quiz
+                dbQuiz = _context.DbQuizzes
+                    .Include(q => q.Questions) 
+                    .ThenInclude(q => q.Answers)    
+                    .First(x => x.Id == quiz.Id);
+                
+                dbQuiz.Title = quiz.Title;
+                dbQuiz.TimeLimit = quiz.TimeLimit;
+
+                quiz.Questions.ForEach(q =>
+                {
+                    DbQuestion? dbQuestion = null;
+                    if (q.Id != null)
+                    {
+                        dbQuestion = dbQuiz.Questions.FirstOrDefault(x => x.Id == q.Id);
+                    }
+                    if (dbQuestion == null)
+                    {
+                        dbQuestion = new DbQuestion();
+                        dbQuiz.Questions.Add(dbQuestion);
+                    }
+                    dbQuestion.Text = q.Text;
+
+                    q.Answers.ForEach(a =>
+                    {
+                        DbAnswer? dbAnswer = null;
+                        if (a.Id != null)
+                        {
+                            dbAnswer = dbQuestion.Answers.FirstOrDefault(x => x.Id == a.Id);
+                        }
+                        if (dbAnswer == null)
+                        {
+                            dbAnswer = new DbAnswer();
+                            dbQuestion.Answers.Add(dbAnswer);
+                        }
+                        dbAnswer.Text = a.Text;
+                        dbAnswer.IsCorrect = a.IsCorrect;
+                    });
+                });
+
+            }
+
+            _context.SaveChanges();
+
+        }
+
         public void Add(Quiz quiz, Question question)
         {
-            Add(quiz);
             var dbquestion = new DbQuestion()
             {
-                Id = question.Id,
                 Text = question.Text,
                 Image = question.Image,
-                QuizId = quiz.Id,
+                //QuizId = (int)quiz.Id,
             };
             questionRepository.AddAsync(dbquestion).Wait();
             try
@@ -71,7 +151,7 @@ namespace Server.Services
         {
             var dbquestion = new DbQuestion()
             {
-                Id = question.Id,
+                //Id = question.Id,
                 Text = question.Text,
                 Image = question.Image,
                 QuizId = quizId,
@@ -91,7 +171,7 @@ namespace Server.Services
         {
             var dbquestion = new DbQuestion()
             {
-                Id = question.Id,
+                //Id = question.Id,
                 Text = question.Text,
                 Image = question.Image,
                 QuizId = quizId,
@@ -99,7 +179,7 @@ namespace Server.Services
             questionRepository.AddAsync(dbquestion).Wait();
             var dbanswer = new DbAnswer()
             {
-                Id = answer.Id,
+                //Id = answer.Id,
                 Text = answer.Text,
                 IsCorrect = answer.IsCorrect,
             };
@@ -116,7 +196,7 @@ namespace Server.Services
 
         public void Delete(Quiz quiz)
         {
-            quizRepository.DeleteAsync(quiz.Id).Wait();
+            quizRepository.DeleteAsync((int)quiz.Id).Wait();
             try
             {
                 SaveChanges();
@@ -129,7 +209,7 @@ namespace Server.Services
 
         public void Delete(Question question)
         {
-            questionRepository.DeleteAsync(question.Id).Wait();
+            questionRepository.DeleteAsync((int)question.Id).Wait();
             try
             {
                 SaveChanges();
@@ -142,7 +222,7 @@ namespace Server.Services
 
         public void Delete(Answer answer)
         {
-            answerRepository.DeleteAsync(answer.Id).Wait();
+            //answerRepository.DeleteAsync(answer.Id).Wait();
             try
             {
                 SaveChanges();
