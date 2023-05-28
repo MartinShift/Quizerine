@@ -18,18 +18,15 @@ namespace Server.Services
     {
         Repository<DbQuiz> quizRepository { get; set; }
         Repository<DbQuestion> questionRepository { get; set; }
-        Repository<DbQuizResult> quizResultRepository { get; set; }
         Repository<DbAnswer> answerRepository { get; set; }
         QuizerineDbContext _context { get; set; }
         public QuizService(QuizerineDbContext quizerineDb)
         {
             quizRepository = new Repository<DbQuiz>(quizerineDb);
-            quizResultRepository = new Repository<DbQuizResult>(quizerineDb);
             answerRepository = new Repository<DbAnswer>(quizerineDb);
             questionRepository = new Repository<DbQuestion>(quizerineDb);
             _context = quizerineDb;
         }
-        public bool HasPassed(string client, int quizid) => quizResultRepository.ExistsAsync(qr => qr.ClientName == client && qr.QuizId == quizid).Result;
         public void Add(Quiz quiz)
         {
             var dbquiz = new DbQuiz()
@@ -44,7 +41,7 @@ namespace Server.Services
             {
                 SaveChanges();
             }
-            catch(DbException e)
+            catch (DbException)
             {
                 throw new Exception("Помилка під час спроби додати вікторину");
             }
@@ -265,10 +262,15 @@ namespace Server.Services
             {
                 _context.SaveChanges();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
+        }
+
+        public int GetQUizId(Quiz quiz)
+        {
+            return quizRepository.FindByConditionAsync(x => x.Title == quiz.Title).Result.First().Id;
         }
     }
 }
