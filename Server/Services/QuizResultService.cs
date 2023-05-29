@@ -1,5 +1,6 @@
 ﻿using CommonLibrary.LibraryModels;
 using DbModels.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Server.DbModels;
 using Server.Services.Interfaces;
 using System;
@@ -20,15 +21,21 @@ namespace Server.Services
             _context = context;
             quizResultRepository = new Repository<DbQuizResult>(context);
         }
-        public void Add(QuizResult quizResult)
+        public void Load(QuizResult quizResult)
         {
-            var dbquizResult = new DbQuizResult
+            if (quizResult.Quiz.Id != null)
             {
-                ClientName = quizResult.ClientName,
-                SecondsSpent = quizResult.SecondsSpent,
-                Points = quizResult.Points,
-                QuizId = quizResult.Quiz.Id,
-            }; quizResultRepository.AddAsync(dbquizResult).Wait();
+                var dbQuiz = _context.DbQuizzes.First(x => quizResult.Quiz.Id == x.Id);
+                var dbquizResult = new DbQuizResult
+                {
+                    ClientName = quizResult.ClientName,
+                    SecondsSpent = quizResult.SecondsSpent,
+                    Points = quizResult.Points,
+                    Quiz = dbQuiz,
+                };
+                if (!HasPassed(quizResult.ClientName, quizResult.Quiz))
+                    _context.Add(dbquizResult);
+            }
             try
             {
                 _context.SaveChanges();
@@ -39,7 +46,10 @@ namespace Server.Services
             }
         }
 
-        public bool HasPassed(string client, Quiz quiz) => quizResultRepository.ExistsAsync(qr => qr.ClientName == client && qr.Quiz.Id == quiz.Id).Result;
+        public bool HasPassed(string client, Quiz quiz)
+        {
+            return _context.DbResults.Include(x => x.Quiz).FirstOrDefault(qr => qr.ClientName == client && qr.Quiz.Id == quiz.Id) != null;
+        }
 
         public ICollection<DbQuizResult> FindResultsByClient(string client)
         {
