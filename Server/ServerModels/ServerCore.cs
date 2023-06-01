@@ -77,6 +77,7 @@ namespace Server.ServerModels
                 Type = DataType.AllQuizzesRequest
             }; 
             return  JsonSerializer.Serialize(message);
+          
         }
         public static string GetAllQuizResults()
         {
