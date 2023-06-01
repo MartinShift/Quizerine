@@ -15,14 +15,13 @@ namespace Server.ServerModels
     {
         public static string AddQuizResult(QuizResult result)
         {
-            //  var context = new QuizerineDbContext();
-            var dbresult = new QuizResult()
+            var context = new QuizerineDbContext();
+            var dbresult = new DbQuizResult()
             {
                 SecondsSpent = result.SecondsSpent,
                 ClientName = result.ClientName,
                 Points = result.Points,
-                //Знайти в ДБ вікторину з таким самим Id
-                //Quiz = 
+                Quiz = context.DbQuizzes.First(x=> x.Id == result.Quiz.Id)
             };
             //TODO додати результат в базу даних
 
@@ -31,7 +30,7 @@ namespace Server.ServerModels
             var message = new DataMessage()
             {
                 Data = "",
-                //      Type = DataType.QuizResult
+                Type = DataType.QuizResult
             };
             return JsonSerializer.Serialize(message);
         }
@@ -43,11 +42,11 @@ namespace Server.ServerModels
             var message = new DataMessage()
             {
                 Data = "",
-                //    Type = DataType.AddNewQuiz
+                Type = DataType.AddNewQuiz
             };
             return JsonSerializer.Serialize(message);
         }
-        public static List<Quiz> GetAllQuizzes()
+        public static string GetAllQuizzes()
         {
              var context = new QuizerineDbContext();
             var service = new QuizService(context);
@@ -74,13 +73,13 @@ namespace Server.ServerModels
             }) ;
             var message = new DataMessage()
             {
-                //TODO серіалізувати всі вікторини в Data
-                //Data = ,
-                // Type = DataType.AllQuizzesRequest
-            };
-            return null;
+                Data = JsonSerializer.Serialize(res.ToList()),
+                Type = DataType.AllQuizzesRequest
+            }; 
+            return  JsonSerializer.Serialize(message);
+          
         }
-        public static List<QuizResult> GetAllQuizResults()
+        public static string GetAllQuizResults()
         {
 
             var quizzes = GetAllQuizzes();
@@ -90,7 +89,7 @@ namespace Server.ServerModels
             //Коли буде готовий QuizResultService зробити заповнення results
 
             //
-            return results;
+            return  JsonSerializer.Serialize(results.ToList());
         }
         public static string UpdateQuiz(Quiz quiz)
         {
@@ -105,6 +104,5 @@ namespace Server.ServerModels
             };
             return JsonSerializer.Serialize(message);
         }
-
     }
 }
