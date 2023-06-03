@@ -40,16 +40,10 @@ namespace Server.ServerModels
                         response = _core.AddNewQuiz(quiz);
                         break;
                     case DataType.AllQuizzesRequest:
-                        //Взяти всі(або деякі) Вікторини з бази даних
-                        var quizzes = _core.GetAllQuizzes();
-                        response = JsonSerializer.Serialize(quizzes);
+                        response = _core.GetAllQuizzes(); ;
                         break;
                     case DataType.AllQuizResultsRequest:
-                        //Взяти всі(або деякі) Вікторини з бази даних
-                        var quizresults = _core.GetAllQuizResults();
-                        response = JsonSerializer.Serialize(quizresults);
-                        //
-                        response = null!;
+                        response = _core.GetAllQuizResults();
                         break;
                     case DataType.UpdateQuiz:
                         //Взяти всі(або деякі) Вікторини з бази даних

@@ -10,7 +10,7 @@ namespace Server.Services.Interfaces;
 
 public interface IQuizResultService
 {
-    public void Add(QuizResult quizResult);
+    public void Load(QuizResult quizResult);
     public bool HasPassed(string client, Quiz quiz);
     public ICollection<DbQuizResult> GetAll();
     public ICollection<DbQuizResult> FindResultsByClient(string client);
