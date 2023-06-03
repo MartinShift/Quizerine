@@ -29,23 +29,23 @@ public class ServerCore
 
     public string AddQuizResult(QuizResult result)
     {
-        //  var context = new QuizerineDbContext();
-        var dbresult = new QuizResult()
+        var quiz = _context.DbQuizzes.First(x => x.Id == result.Quiz.Id);
+        
+        var dbresult = new DbQuizResult()
         {
             SecondsSpent = result.SecondsSpent,
             ClientName = result.ClientName,
             Points = result.Points,
-            //Знайти в ДБ вікторину з таким самим Id
-            //Quiz = 
+            Quiz = quiz,
         };
-        //TODO додати результат в базу даних
-
+        _context.DbResults.Add(dbresult);
+        _context.SaveChanges();
 
         //
         var message = new DataMessage()
         {
             Data = "",
-            //      Type = DataType.QuizResult
+            Type = DataType.QuizResult
         };
         return JsonSerializer.Serialize(message);
     }
