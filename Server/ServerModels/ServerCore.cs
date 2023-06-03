@@ -93,6 +93,7 @@ public class ServerCore
                 {
                     ClientName = dbResult.ClientName,
                     Points = dbResult.Points,
+                    SecondsSpent = dbResult.SecondsSpent,
                     Quiz = new Quiz
                     {
                         Id = dbResult.Quiz.Id,
