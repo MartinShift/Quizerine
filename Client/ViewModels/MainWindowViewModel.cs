@@ -347,5 +347,6 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
         window.Show();
         // update QuizResults
         _loadQuizResults();
+        OnPropertyChanged(nameof(QuizResults));
     }, x => _selectedQuiz !=null && _nickname.Length>0);
 }
