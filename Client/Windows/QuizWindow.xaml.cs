@@ -1,4 +1,5 @@
-﻿using Client.ViewModels;
+﻿using Client.Models;
+using Client.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,20 +12,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Client
+namespace Client.Windows
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for QuizWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class QuizWindow : Window
     {
-        public MainWindow()
+        public QuizWindow(QuizViewModel quiz, string nickname, ServerHelper helper)
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            DataContext = new TakingAQuizViewModel(quiz, nickname, helper);
         }
     }
 }
