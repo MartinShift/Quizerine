@@ -37,7 +37,8 @@ namespace Client.Models
                 Type = DataType.AllQuizResultsRequest
             };
             var response = sendToServer(datamessage);
-            return JsonSerializer.Deserialize<List<QuizResult>>(response.Data);
+            var data = JsonSerializer.Deserialize<List<QuizResult>>(response.Data);
+            return data;
         }
 
         //Quizzes
