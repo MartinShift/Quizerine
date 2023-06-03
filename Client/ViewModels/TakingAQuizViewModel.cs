@@ -1,10 +1,12 @@
-﻿using Client_Wpf.Models;
+﻿using Client.Models;
+using Client_Wpf.Models;
 using CommonLibrary.LibraryModels;
 using My.BaseViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -15,8 +17,9 @@ namespace Client.ViewModels;
 
 public class TakingAQuizViewModel : NotifyPropertyChangedBase
 {
-    public TakingAQuizViewModel(QuizViewModel quiz, string nickname)
+    public TakingAQuizViewModel(QuizViewModel quiz, string nickname, ServerHelper helper)
     {
+        _server = helper;
         _quiz = quiz;
         _nickname = nickname;
         _currentQuestionIndex = 0;
@@ -42,6 +45,7 @@ public class TakingAQuizViewModel : NotifyPropertyChangedBase
         _currentQuestion = _quiz.Questions[_currentQuestionIndex];
         _timer.Start();
     }
+    private readonly ServerHelper _server;
     private string _nickname;
     private QuizViewModel _quiz;
     private QuestionViewModel _currentQuestion;
@@ -146,7 +150,9 @@ public class TakingAQuizViewModel : NotifyPropertyChangedBase
                     Points = score
                 };
                 
-                Client.Models.ServerHelper.SendQuizResult(result);
+                //Client.Models.ServerHelper.SendQuizResult(result);
+                _server.SendQuizResult(result);
+                //Thread.Sleep(1000);
                 CloseQuiz();
                 //close window and show main
                 //var thisWindow = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);

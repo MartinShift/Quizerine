@@ -11,6 +11,7 @@ using System.Windows;
 using Client.Windows;
 using System.Windows.Media.Imaging;
 using Client_Wpf.Models;
+using Client.Models;
 
 namespace Client.ViewModels;
 
@@ -201,17 +202,20 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
         // load all Quiz
         // load all QuizResult
 
-
+        _server = new ServerHelper("127.0.0.1", 5000);
         _loadQuizzes();
-        //_loadQuizResults();    //exception
+        _loadQuizResults();    
     }
+    private readonly ServerHelper _server;
     private void _loadQuizzes()
     {
-        _allQuizzes = Client.Models.ServerHelper.GetQuizzes();
+        _allQuizResults.Clear();
+        _allQuizzes.AddRange(_server.GetQuizzes());
     }
     private void _loadQuizResults()
     {
-        _allQuizResults = Client.Models.ServerHelper.GetQuizResults();
+        _allQuizResults.Clear();
+        _allQuizResults.AddRange(_server.GetQuizResults());
     }
     private List<Quiz> _allQuizzes;
     public ObservableCollection<QuizViewModel> Quizzes   // quizzes filtered for user (nickname)
@@ -339,9 +343,9 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
         //MessageBox.Show($"Selected quiz: {_selectedQuiz.Title}\nNickName: {_nickname}", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
         // open new quiz window
         Application.Current.MainWindow.Hide();
-        var window = new QuizWindow(_selectedQuiz, Nickname);
+        var window = new QuizWindow(_selectedQuiz, Nickname, _server);
         window.Show();
         // update QuizResults
-        //_loadQuizResults();
+        _loadQuizResults();
     }, x => _selectedQuiz !=null && _nickname.Length>0);
 }

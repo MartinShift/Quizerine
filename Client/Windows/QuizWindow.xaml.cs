@@ -1,4 +1,5 @@
-﻿using Client.ViewModels;
+﻿using Client.Models;
+using Client.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,10 @@ namespace Client.Windows
     /// </summary>
     public partial class QuizWindow : Window
     {
-        public QuizWindow(QuizViewModel quiz, string nickname)
+        public QuizWindow(QuizViewModel quiz, string nickname, ServerHelper helper)
         {
             InitializeComponent();
-            DataContext = new TakingAQuizViewModel(quiz, nickname);
+            DataContext = new TakingAQuizViewModel(quiz, nickname, helper);
         }
     }
 }
