@@ -1,7 +1,9 @@
 ﻿using CommonLibrary.LibraryModels;
+using Microsoft.EntityFrameworkCore;
 using ModelLibrary.JsonModels;
 using Server.DbModels;
 using Server.Services;
+using Server.Services.Interfaces;
 using SQLitePCL;
 using System;
 using System.Collections.Generic;
@@ -16,11 +18,13 @@ public class ServerCore
 {
     private QuizerineDbContext _context;
     private IQuizService _quizService;
+    private IQuizResultService _quizResultService;
 
-    public ServerCore(QuizerineDbContext context, IQuizService quizService)
+    public ServerCore(QuizerineDbContext context, IQuizService quizService, IQuizResultService quizResultService)
     {
         _context = context;
         _quizService = quizService;
+        _quizResultService = quizResultService;
     }
 
     public string AddQuizResult(QuizResult result)
@@ -45,10 +49,10 @@ public class ServerCore
         };
         return JsonSerializer.Serialize(message);
     }
-    
+
     public string GetAllQuizzes()
     {
-        var quizzes =  _quizService.GetAll();
+        var quizzes = _quizService.GetAll();
         var res = quizzes.Select(x => new Quiz()
         {
             Id = x.Id,
@@ -79,14 +83,27 @@ public class ServerCore
     }
     public string GetAllQuizResults()
     {
-
-        var quizzes = GetAllQuizzes();
-
-        var results = new List<QuizResult>();
-        //Коли буде готовий QuizResultService зробити заповнення results
-
-        //
-        return JsonSerializer.Serialize(results.ToList());
+        var message = new DataMessage
+        {
+            Data = JsonSerializer.Serialize(
+                _context
+                .DbResults
+                .Include(x => x.Quiz)
+                .Select(dbResult => new QuizResult
+                {
+                    ClientName = dbResult.ClientName,
+                    Points = dbResult.Points,
+                    Quiz = new Quiz
+                    {
+                        Id = dbResult.Quiz.Id,
+                        Title = dbResult.Quiz.Title,
+                        Image = dbResult.Quiz.Image,
+                        Questions = new(),
+                    }
+                })),
+            Type = DataType.AllQuizResultsRequest
+        };
+        return JsonSerializer.Serialize(message);
     }
     public string UpdateQuiz(Quiz quiz)
     {
@@ -104,7 +121,7 @@ public class ServerCore
     public string AddNewQuiz(Quiz quiz)
     {
         _quizService.Load(quiz);
-        
+
         var message = new DataMessage()
         {
             Data = "",

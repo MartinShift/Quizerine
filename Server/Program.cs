@@ -5,6 +5,7 @@ using Server.ServerModels;
 using Server.Services;
 using DbModels.Repository.Interfaces;
 using System;
+using Server.Services.Interfaces;
 
 var services = new ServiceCollection()
     .AddDbContext<QuizerineDbContext>(builder =>
@@ -12,6 +13,7 @@ var services = new ServiceCollection()
         builder.UseSqlite("Data Source=C:\\Users\\kvvkv\\source\\repos\\Quizerine\\quiz.db");
     })
     .AddScoped<IQuizService, QuizService>()
+    .AddScoped<IQuizResultService, QuizResultService>()
     .AddScoped<ServerCore, ServerCore>()
     .AddSingleton<IServer, QuizServer>();
 
