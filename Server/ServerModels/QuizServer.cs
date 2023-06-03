@@ -11,13 +11,15 @@ using CommonLibrary.LibraryModels;
 
 namespace Server.ServerModels
 {
-    public class QuizServer
+    public class QuizServer : IServer
     {
+        private ServerCore _core;
+        
         public Socket Socket { get; set; }
         public IPAddress Ip { get; set; }
         public IPEndPoint Ep { get; set; }
-        public Action<Socket> worker = (s) =>
-        {
+
+        public void Worker(Socket s) {
             try
             {
                 var buffer = new byte[10000000];
@@ -31,30 +33,22 @@ namespace Server.ServerModels
                     case DataType.QuizResult:
                         //Добавити результат у базу даних
                         var result = JsonSerializer.Deserialize<QuizResult>(message.Data);
-                        response = ServerCore.AddQuizResult(result);
+                        response =  _core.AddQuizResult(result);
                         break;
                     case DataType.AddNewQuiz:
                         var quiz = JsonSerializer.Deserialize<Quiz>(message.Data);
-                        response = ServerCore.AddNewQuiz(quiz);
+                        response = _core.AddNewQuiz(quiz);
                         break;
                     case DataType.AllQuizzesRequest:
-                        //Взяти всі(або деякі) Вікторини з бази даних
-                        var quizzes = ServerCore.GetAllQuizzes();
-                        response = JsonSerializer.Serialize(quizzes);
-                        //
-                        response = null!;
-                        break;
+                        response = _core.GetAllQuizzes(); ;
+                        break;
                     case DataType.AllQuizResultsRequest:
-                        //Взяти всі(або деякі) Вікторини з бази даних
-                        var quizresults = ServerCore.GetAllQuizResults();
-                        response = JsonSerializer.Serialize(quizresults);
-                        //
-                        response = null!;
+                        response = _core.GetAllQuizResults();
                         break;
                     case DataType.UpdateQuiz:
                         //Взяти всі(або деякі) Вікторини з бази даних
                         var update = JsonSerializer.Deserialize<Quiz>(message.Data);
-                        response = ServerCore.UpdateQuiz(update);
+                        response = _core.UpdateQuiz(update);
                         //
                         response = null!;
                         break;
@@ -62,20 +56,24 @@ namespace Server.ServerModels
                 var mes = Encoding.UTF8.GetBytes(response);
                 Console.WriteLine(response);
                 s.Send(mes);
-                s.Close();
+                //s.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
             }
-        };
-        public QuizServer()
+        }
+
+        public QuizServer(ServerCore core)
         {
+            _core = core;
             Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
             Ip = IPAddress.Parse("127.0.0.1");
             Ep = new IPEndPoint(Ip, 5000);
             Socket.Bind(Ep);
         }
+
         public void Run()
         {
             while (true)
@@ -86,7 +84,7 @@ namespace Server.ServerModels
                 Console.WriteLine("New socket connected");
                 Task.Run(() =>
                 {
-                    worker(ns);
+                    Worker(ns);
                 });
             }
         }

@@ -1,4 +1,5 @@
-﻿using CommonLibrary.LibraryModels;
+﻿using Client.Models;
+using CommonLibrary.LibraryModels;
 using My.BaseViewModels;
 using System;
 using System.Collections.Generic;
@@ -16,33 +17,35 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
     public MainWindowViewModel()
     {
         _quizes = new();
+        
 
-        Task.Run(() => { LoadQuizes(); });
+        //Task.Run(() => { LoadQuizes(); });
 
     }
     private List<Quiz> _quizes { get; set; }
     private void LoadQuizes()
     {
+        _quizes.AddRange(ServerHelper.GetQuizzes());
         //TODO Get from server
-        _quizes.Add(new Quiz
-        {
-            Id = 1,
-            Title = "Quiz # 1",
-            TimeLimit = 90,
-        });
+        //_quizes.Add(new Quiz
+        //{
+        //    Id = 1,
+        //    Title = "Quiz # 1",
+        //    TimeLimit = 90,
+        //});
 
-        _quizes.Add(new Quiz
-        {
-            Id = 2,
-            Title = "Quiz # 2",
-            TimeLimit = 60,
-        });
-        _quizes.Add(new Quiz
-        {
-            Id = 3,
-            Title = "Quiz # 3",
-            TimeLimit = 120,
-        });
+        //_quizes.Add(new Quiz
+        //{
+        //    Id = 2,
+        //    Title = "Quiz # 2",
+        //    TimeLimit = 60,
+        //});
+        //_quizes.Add(new Quiz
+        //{
+        //    Id = 3,
+        //    Title = "Quiz # 3",
+        //    TimeLimit = 120,
+        //});
 
         OnPropertyChanged(nameof(Quizes));
     }
@@ -92,4 +95,25 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
 
 
     }, x => true);
+
+    public ICommand SaveToServer => new RelayCommand(x =>
+    {
+        _quizes.ForEach(ServerHelper.SendNewQuiz);
+        
+        
+
+    }, x => true);
+
+
+    public ICommand LoadFromServer => new RelayCommand(x =>
+    {
+        _quizes.Clear();
+        LoadQuizes();
+
+
+
+    }, x => true);
+
+    
+
 }

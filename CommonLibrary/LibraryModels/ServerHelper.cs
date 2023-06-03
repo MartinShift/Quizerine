@@ -13,6 +13,7 @@ namespace Client.Models
 {
     public static class ServerHelper
     {
+        //Results
         public static void SendQuizResult(QuizResult message)
         {
             var datamessage = new DataMessage()
@@ -22,6 +23,18 @@ namespace Client.Models
             };
             SendToServer(datamessage);
         }
+        public static List<QuizResult> GetQuizResults()
+        {
+            var datamessage = new DataMessage()
+            {
+                Data = "",
+                Type = DataType.AllQuizResultsRequest
+            };
+            var response = SendToServer(datamessage);
+            return JsonSerializer.Deserialize<List<QuizResult>>(response.Data);
+        } 
+     
+        //Quizzes
         public static void SendNewQuiz(Quiz message)
         {
             var datamessage = new DataMessage()
@@ -39,31 +52,8 @@ namespace Client.Models
                 Type = DataType.AllQuizzesRequest
             };
             var response = SendToServer(datamessage);
-            return JsonSerializer.Deserialize<List<Quiz>>(response.Data);
-        }
-        public static List<QuizResult> GetQuizResults()
-        {
-            var datamessage = new DataMessage()
-            {
-                Data = "",
-                Type = DataType.AllQuizResultsRequest
-            };
-            var response = SendToServer(datamessage);
-            return JsonSerializer.Deserialize<List<QuizResult>>(response.Data);
-        }
-        public static DataMessage SendToServer(DataMessage message)
-        {
-            var Ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
-            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-            socket.Connect(Ep);
-            var str = JsonSerializer.Serialize(message);
-            var bytes = Encoding.UTF8.GetBytes(str);
-            socket.Send(bytes);
-            var response = new byte[10000000];
-            var read = socket.Receive(response);
-            var responsestr = Encoding.UTF8.GetString(response, 0, read);
-            socket.Close();
-            return JsonSerializer.Deserialize<DataMessage>(responsestr);
+            var data = JsonSerializer.Deserialize<List<Quiz>>(response.Data);
+            return data;
         }
         public static void UpdateQuiz(Quiz quiz)
         {
@@ -74,5 +64,20 @@ namespace Client.Models
             }; 
             SendToServer(datamessage);
         }
+        public static DataMessage SendToServer(DataMessage message)
+        {
+            var Ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
+            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+            socket.Connect(Ep);
+            var str = JsonSerializer.Serialize(message);
+            var bytes = Encoding.UTF8.GetBytes(str);
+            socket.Send(bytes);
+            var response = new byte[100000];
+            var read = socket.Receive(response);
+            var responsestr = Encoding.UTF8.GetString(response, 0, read);
+            socket.Close();
+            return JsonSerializer.Deserialize<DataMessage>(responsestr);
+        }
+       
     }
 }
