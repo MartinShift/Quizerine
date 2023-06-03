@@ -44,14 +44,18 @@
                 <ListView.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Delete"></MenuItem>
-                        <MenuItem Header="Add" ></MenuItem>
+                        <MenuItem Header="Add" Command="{Binding Path=SelectedQuestion.CreateAnswer}" ></MenuItem>
                     </ContextMenu>
                 </ListView.ContextMenu>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <CheckBox IsChecked="{Binding Path=IsCorrect}"></CheckBox>
-                            <TextBox Text="{Binding Path=Text}"></TextBox>
+                            <TextBlock>
+                            <CheckBox IsChecked="{Binding Path=IsCorrect}"></CheckBox>    
+                                <TextBox Text="{Binding Path=Text, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                            </TextBlock>
+                            
+                            
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>

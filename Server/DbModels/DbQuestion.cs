@@ -16,7 +16,7 @@ public class DbQuestion
     public int Id { get; set; }
     public string Text { get; set; }
     public virtual ICollection<DbAnswer> Answers { get; set; }
-    public byte?[] Image { get; set; }
+    public byte[]? Image { get; set; }
     public int QuizId { get; set; }
     public DbQuiz Quiz { get; set; }
 }

@@ -43,7 +43,6 @@ public class QuestionViewModel : NotifyPropertyChangedBase
 
     public ICommand CreateAnswer => new RelayCommand(x =>
     {
-        MessageBox.Show("Create");
         Model.Answers.Add(new Answer
         {
             Text = "Answer",
