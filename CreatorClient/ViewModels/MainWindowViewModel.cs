@@ -14,9 +14,11 @@ namespace CreatorClient.ViewModels;
 
 public class MainWindowViewModel : NotifyPropertyChangedBase
 {
+    private readonly ServerHelper _server;
     public MainWindowViewModel()
     {
         _quizes = new();
+        _server = new ServerHelper("127.0.0.1", 5000);
         
 
         //Task.Run(() => { LoadQuizes(); });
@@ -25,7 +27,7 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
     private List<Quiz> _quizes { get; set; }
     private void LoadQuizes()
     {
-        _quizes.AddRange(ServerHelper.GetQuizzes());
+        _quizes.AddRange(_server.GetQuizzes());
         //TODO Get from server
         //_quizes.Add(new Quiz
         //{
@@ -98,7 +100,7 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
 
     public ICommand SaveToServer => new RelayCommand(x =>
     {
-        _quizes.ForEach(ServerHelper.SendNewQuiz);
+        _quizes.ForEach(_server.SendNewQuiz);
         
         
 

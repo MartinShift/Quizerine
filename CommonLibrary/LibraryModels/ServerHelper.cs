@@ -11,64 +11,69 @@ using System.Threading.Tasks;
 
 namespace Client.Models
 {
-    public static class ServerHelper
+    public class ServerHelper
     {
+        private IPEndPoint _serverEndPoint;
+        public ServerHelper(string serverIp, int port)
+        {
+            _serverEndPoint = new IPEndPoint(IPAddress.Parse(serverIp), port);
+        }
+
         //Results
-        public static void SendQuizResult(QuizResult message)
+        public void SendQuizResult(QuizResult message)
         {
             var datamessage = new DataMessage()
             {
                 Data = JsonSerializer.Serialize(message),
                 Type = DataType.QuizResult
             };
-            SendToServer(datamessage);
+            sendToServer(datamessage);
         }
-        public static List<QuizResult> GetQuizResults()
+        public List<QuizResult> GetQuizResults()
         {
             var datamessage = new DataMessage()
             {
                 Data = "",
                 Type = DataType.AllQuizResultsRequest
             };
-            var response = SendToServer(datamessage);
+            var response = sendToServer(datamessage);
             return JsonSerializer.Deserialize<List<QuizResult>>(response.Data);
-        } 
-     
+        }
+
         //Quizzes
-        public static void SendNewQuiz(Quiz message)
+        public void SendNewQuiz(Quiz message)
         {
             var datamessage = new DataMessage()
             {
                 Data = JsonSerializer.Serialize(message),
                 Type = DataType.AddNewQuiz
             };
-            SendToServer(datamessage);
+            sendToServer(datamessage);
         }
-        public static List<Quiz> GetQuizzes()
+        public List<Quiz> GetQuizzes()
         {
             var datamessage = new DataMessage()
             {
                 Data = "",
                 Type = DataType.AllQuizzesRequest
             };
-            var response = SendToServer(datamessage);
+            var response = sendToServer(datamessage);
             var data = JsonSerializer.Deserialize<List<Quiz>>(response.Data);
             return data;
         }
-        public static void UpdateQuiz(Quiz quiz)
+        public void UpdateQuiz(Quiz quiz)
         {
             var datamessage = new DataMessage()
             {
                 Data = JsonSerializer.Serialize(quiz),
                 Type = DataType.UpdateQuiz
-            }; 
-            SendToServer(datamessage);
+            };
+            sendToServer(datamessage);
         }
-        public static DataMessage SendToServer(DataMessage message)
+        private DataMessage sendToServer(DataMessage message)
         {
-            var Ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-            socket.Connect(Ep);
+            socket.Connect(_serverEndPoint);
             var str = JsonSerializer.Serialize(message);
             var bytes = Encoding.UTF8.GetBytes(str);
             socket.Send(bytes);
@@ -78,6 +83,6 @@ namespace Client.Models
             socket.Close();
             return JsonSerializer.Deserialize<DataMessage>(responsestr);
         }
-       
+
     }
 }

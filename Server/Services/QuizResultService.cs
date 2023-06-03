@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Server.Services
 {
-    internal class QuizResultService : IQuizResultService
+    public class QuizResultService : IQuizResultService
     {
         Repository<DbQuizResult> quizResultRepository { get; set; }
         QuizerineDbContext _context;
