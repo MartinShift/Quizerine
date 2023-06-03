@@ -15,6 +15,6 @@ namespace CommonLibrary.LibraryModels
         public int? Id { get; set; }
         public string Text { get; set; }
         public List<Answer> Answers { get; set; }
-        public byte?[] Image { get; set; }
+        public byte[]? Image { get; set; }
     }
 }

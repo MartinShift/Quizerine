@@ -49,9 +49,7 @@ namespace Server.ServerModels
                         //Взяти всі(або деякі) Вікторини з бази даних
                         var update = JsonSerializer.Deserialize<Quiz>(message.Data);
                         response = _core.UpdateQuiz(update);
-                        //
-                        response = null!;
-                        break;
+                        break;
                 }
                 var mes = Encoding.UTF8.GetBytes(response);
                 Console.WriteLine(response);
