@@ -16,7 +16,7 @@ public class QuestionViewModel : NotifyPropertyChangedBase
         Model = question;
     }
     public Question Model { get; set; }
-    public int Id
+    public int? Id
     {
         get => Model.Id;
         set
