@@ -209,13 +209,14 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
     private readonly ServerHelper _server;
     private void _loadQuizzes()
     {
-        _allQuizResults.Clear();
+        _allQuizzes.Clear();
         _allQuizzes.AddRange(_server.GetQuizzes());
     }
     private void _loadQuizResults()
     {
         _allQuizResults.Clear();
         _allQuizResults.AddRange(_server.GetQuizResults());
+        _selectedQuizForResults = new QuizViewModel(_allQuizzes.FirstOrDefault());
     }
     private List<Quiz> _allQuizzes;
     public ObservableCollection<QuizViewModel> Quizzes   // quizzes filtered for user (nickname)
@@ -344,7 +345,7 @@ public class MainWindowViewModel : NotifyPropertyChangedBase
         // open new quiz window
         Application.Current.MainWindow.Hide();
         var window = new QuizWindow(_selectedQuiz, Nickname, _server);
-        window.Show();
+        window.ShowDialog();
         // update QuizResults
         _loadQuizResults();
         OnPropertyChanged(nameof(QuizResults));

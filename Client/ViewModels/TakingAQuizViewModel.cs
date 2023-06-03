@@ -152,12 +152,8 @@ public class TakingAQuizViewModel : NotifyPropertyChangedBase
                 
                 //Client.Models.ServerHelper.SendQuizResult(result);
                 _server.SendQuizResult(result);
-                //Thread.Sleep(1000);
                 CloseQuiz();
-                //close window and show main
-                //var thisWindow = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
-                //thisWindow.Close();
-                //Application.Current.MainWindow.Show();
+
                 return;
             }
             _currentQuestion = _quiz.Questions[_currentQuestionIndex];
