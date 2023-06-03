@@ -294,7 +294,7 @@ namespace Server.Services
             {
                 Text = answer.Text,
                 IsCorrect = answer.IsCorrect,
-                Question = _context.DbQuestions.First(x=> x.Id == questionId),
+                Question = _context.DbQuestions.First(x => x.Id == questionId),
             };
             answerRepository.AddAsync(dbanswer).Wait();
             try
@@ -324,7 +324,7 @@ namespace Server.Services
 
         public ICollection<DbQuiz> GetAll()
         {
-            return _context.DbQuizzes.Include(x => x.Results).Include(x => x.Questions).ThenInclude(x=> x.Answers).ToList();
+            return _context.DbQuizzes.Include(x => x.Results).Include(x => x.Questions).ThenInclude(x => x.Answers).ToList();
         }
 
         public ICollection<DbQuestion> GetQuizQuestions(int quizId)

@@ -88,6 +88,7 @@ public class ServerCore
                 Type = DataType.AllQuizzesRequest
             }; 
             return  JsonSerializer.Serialize(message);
+          
         }
         public static string GetAllQuizResults()
         {
