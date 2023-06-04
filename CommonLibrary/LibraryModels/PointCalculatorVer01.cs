@@ -13,10 +13,10 @@ public class PointCalculatorVer01 : IPointCalculator
         const float BASE_FOR_CORRECT = 1000.0F;
         const float BASE_FOR_TIME = 10.0F;
 
-        float persentOfCorrect = (float)correctQuesionCount / (float)questionCount;
+        float percentOfCorrect = (float)correctQuesionCount / (float)questionCount;
 
-        float bonusForTime = ((float)totalTime - (float)spendTime) * BASE_FOR_TIME * persentOfCorrect;
+        float bonusForTime = ((float)totalTime - (float)spendTime) * BASE_FOR_TIME * percentOfCorrect;
 
-        return (int)((BASE_FOR_CORRECT * persentOfCorrect) + bonusForTime);
+        return (int)((BASE_FOR_CORRECT * percentOfCorrect) + bonusForTime);
     }
 }

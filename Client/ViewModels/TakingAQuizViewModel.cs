@@ -189,15 +189,16 @@ public class TakingAQuizViewModel : NotifyPropertyChangedBase
         // 3/5 correctsAnswers for 50/60 seconds = (3*30) + ((60-50)*2) = 110 points
         // 1/5 correctsAnswers for 50/60 seconds = (1*30) + ((60-50)*2) = 50 points
 
-        int pointForCorrectsAnswer = 30;
-        int pointForUnusedSecond = 2;
+        //int pointForCorrectsAnswer = 30;
+        //int pointForUnusedSecond = 2;
 
-        var correctAnswersPoints = correctAnswersCount * pointForCorrectsAnswer;
-        var unusedTimePoints = (_quiz.TimeLimit - (int)timeElapsed) * pointForUnusedSecond;
-        
-        result = correctAnswersPoints + unusedTimePoints;
+        //var correctAnswersPoints = correctAnswersCount * pointForCorrectsAnswer;
+        //var unusedTimePoints = (_quiz.TimeLimit - (int)timeElapsed) * pointForUnusedSecond;
 
-        return result;
+        //result = correctAnswersPoints + unusedTimePoints;
+        var calculator2 = new PointCalculatorVer02();
+        var result2 = calculator2.CalculatePoints(_quiz.TimeLimit, (int)timeElapsed, _quiz.Questions.Count, correctAnswersCount);
+        return result2;
     }
     public void CloseQuiz()
     {
