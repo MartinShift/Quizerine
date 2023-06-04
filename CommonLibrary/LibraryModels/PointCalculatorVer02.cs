@@ -11,8 +11,8 @@ namespace CommonLibrary.LibraryModels
         public int CalculatePoints(int totalTime, int spendTime, int questionCount, int correctQuesionCount)
         {
             var points = correctQuesionCount * 100;
-            var timeScore = totalTime / spendTime;
-            return points * timeScore;
+            var timeScore = (double)totalTime / spendTime;
+            return (int)(points * timeScore);
         }
     }
 }
