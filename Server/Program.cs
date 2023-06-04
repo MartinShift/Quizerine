@@ -10,7 +10,7 @@ using Server.Services.Interfaces;
 var services = new ServiceCollection()
     .AddDbContext<QuizerineDbContext>(builder =>
     {
-        builder.UseSqlite("Data Source=C:\\Users\\kvvkv\\source\\repos\\Quizerine\\quiz.db");
+        builder.UseSqlite("Data Source=D:\\Mein progectos\\Quizerine\\Server\\quiz.db");
     })
     .AddScoped<IQuizService, QuizService>()
     .AddScoped<IQuizResultService, QuizResultService>()
