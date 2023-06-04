@@ -67,13 +67,16 @@ namespace Server.Services
                     var dbQuestion = new DbQuestion()
                     {
                         Text = q.Text,
+                        Image = q.Image,
+                       
                     };
                     dbQuiz.Questions.Add(dbQuestion);
                     q.Answers.ForEach(a => {
                         var dbAnswer = new DbAnswer()
                         {
                             IsCorrect = a.IsCorrect,
-                            Text = a.Text
+                            Text = a.Text,
+                            
                         };
                         dbQuestion.Answers.Add(dbAnswer);
                     });
@@ -91,7 +94,7 @@ namespace Server.Services
                 
                 dbQuiz.Title = quiz.Title;
                 dbQuiz.TimeLimit = quiz.TimeLimit;
-
+                dbQuiz.Image = quiz.Image;
                 quiz.Questions.ForEach(q =>
                 {
                     DbQuestion? dbQuestion = null;
@@ -105,7 +108,7 @@ namespace Server.Services
                         dbQuiz.Questions.Add(dbQuestion);
                     }
                     dbQuestion.Text = q.Text;
-
+                    dbQuestion.Image = q.Image;
                     q.Answers.ForEach(a =>
                     {
                         DbAnswer? dbAnswer = null;
