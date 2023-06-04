@@ -1,4 +1,5 @@
-﻿using CommonLibrary.LibraryModels;
+﻿using Client_Wpf.Models;
+using CommonLibrary.LibraryModels;
 using My.BaseViewModels;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace CreatorClient.ViewModels;
 
@@ -42,11 +44,11 @@ public class QuizViewModel : NotifyPropertyChangedBase
         }
     }
 
-    public byte[]? Image
+    public BitmapImage Image
     {
-        get => Model.Image; set
+        get => Helper.ImageFromBytes(Model.Image); set
         {
-            Model.Image = value;
+            Model.Image = Helper.ImageToBytes(value);
             OnPropertyChanged(nameof(Image));
         }
     }
@@ -83,4 +85,10 @@ public class QuizViewModel : NotifyPropertyChangedBase
 
 
     }, x => true);
+
+    public ICommand LoadQuizLogo => new RelayCommand(x =>
+    {
+        Image = Helper.OpenFromFile();
+        OnPropertyChanged(nameof(Image));
+    });
 }

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CreatorClient"
+        xmlns:local="clr-namespace:CreatorClient" xmlns:viewmodels="clr-namespace:CreatorClient.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <TabControl>
@@ -36,16 +36,17 @@
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Title" Binding="{Binding Path=Title}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="Questions" Binding="{Binding Path=QuestionCount}" ></DataGridTextColumn>
-                        <DataGridTextColumn Header="TimeLimit" Binding="{Binding Path=TimeLimit}"></DataGridTextColumn>
                         <DataGridTemplateColumn Header="Image">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Image Stretch="UniformToFill"  Width="50" Height="50" ></Image>
+                                    <Image Source="{Binding Path=Image}" Stretch="UniformToFill"  Width="50" Height="50" ></Image>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Title" Binding="{Binding Path=Title}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Questions" Binding="{Binding Path=QuestionCount}" ></DataGridTextColumn>
+                        <DataGridTextColumn Header="TimeLimit" Binding="{Binding Path=TimeLimit}"></DataGridTextColumn>
+                        
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

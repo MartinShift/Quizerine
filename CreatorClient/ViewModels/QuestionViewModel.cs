@@ -1,4 +1,5 @@
-﻿using CommonLibrary.LibraryModels;
+﻿using Client_Wpf.Models;
+using CommonLibrary.LibraryModels;
 using My.BaseViewModels;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace CreatorClient.ViewModels;
 
@@ -30,7 +32,14 @@ public class QuestionViewModel : NotifyPropertyChangedBase
             OnPropertyChanged(nameof(Text));
         }
     }
-
+    public BitmapImage Image
+    {
+        get => Helper.ImageFromBytes(Model.Image); set
+        {
+            Model.Image = Helper.ImageToBytes(value);
+            OnPropertyChanged(nameof(Image));
+        }
+    }
     public ObservableCollection<AnswerViewModel> Answers
     {
         get
@@ -53,4 +62,9 @@ public class QuestionViewModel : NotifyPropertyChangedBase
 
     }, x => true);
 
+    public ICommand LoadQuestionLogo => new RelayCommand(x =>
+    {
+        Image = Helper.OpenFromFile();
+        OnPropertyChanged(nameof(Image));
+    });
 }
